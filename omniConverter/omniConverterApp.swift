@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct omniConverterApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
+//      MainView(vm: MainViewModel())
     }
+  }
 }

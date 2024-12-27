@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "8CCB9BC4-3F55-4435-BD95-592EE3B68076"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "76550E21-A062-4F22-AD0B-48F86D85A03F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "omniConverter/ContentView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D1B67477-538B-4189-A49A-11F3849D1834"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "omniConverter/ConversionType.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
+            landmarkName = "unit(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FF1ACA58-CD87-47E3-B9AE-6971C95D285B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "omniConverter/ConversionType.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "323"
+            endingLineNumber = "323"
+            landmarkName = "toUnitCases(allStringCases:)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "FF1ACA58-CD87-47E3-B9AE-6971C95D285B - 986e325cea412421"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "omniConverter.toUnitCases&lt;&#x3c4;_0_0 where &#x3c4;_0_0: __C.NSDimension&gt;(allStringCases: Swift.Array&lt;Swift.String&gt;) -&gt; Swift.Array&lt;&#x3c4;_0_0&gt;"
+                  moduleName = "omniConverter.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/johnflorian/Documents/Xcode/Projects/omniConverter/omniConverter/ConversionType.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "323"
+                  endingLineNumber = "323">
+               </Location>
+               <Location
+                  uuid = "FF1ACA58-CD87-47E3-B9AE-6971C95D285B - b5469e7cd9fbbb10"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.String) -&gt; Swift.Optional&lt;Any&gt; in omniConverter.toUnitCases&lt;&#x3c4;_0_0 where &#x3c4;_0_0: __C.NSDimension&gt;(allStringCases: Swift.Array&lt;Swift.String&gt;) -&gt; Swift.Array&lt;&#x3c4;_0_0&gt;"
+                  moduleName = "omniConverter.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/johnflorian/Documents/Xcode/Projects/omniConverter/omniConverter/ConversionType.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "323"
+                  endingLineNumber = "323">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
