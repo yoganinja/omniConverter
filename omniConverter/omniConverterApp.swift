@@ -11,8 +11,7 @@ import SwiftUI
 struct omniConverterApp: App {
   var body: some Scene {
     WindowGroup {
-      ContentView()
-//      MainView(vm: MainViewModel())
+      MainView(vm: MainViewModel())
     }
   }
 }

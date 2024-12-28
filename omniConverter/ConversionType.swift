@@ -98,7 +98,7 @@ enum ConversionType: String, CaseIterable, Identifiable {
     case .acceleration:
       return "gauge"
     case .angle:
-      return "protractor"
+      return "angle"
     case .area:
       return "square.grid.2x2"
     case .density:
@@ -130,7 +130,7 @@ enum ConversionType: String, CaseIterable, Identifiable {
     case .radiationDose:
       return "radiowaves.left"
     case .radioactivity:
-      return "radiation"
+      return "radiowaves.right"
     case .speed:
       return "speedometer"
     case .volume:
