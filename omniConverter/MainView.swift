@@ -53,27 +53,14 @@ struct MainView: View {
         // Conversion Type Section
         HStack {
           VStack(alignment: .leading) {
-            Button(action: {
-              vm.isConversionTypeSelectorOpen.toggle()
-            }) {
-              HStack(alignment: .center) {
-                Image(systemName: vm.selectedConversionType.imageName)
-                  .resizable()
-                  .frame(width: 24, height: 24)
-                  .padding(.vertical)
-                Text(vm.selectedConversionType.id)
-                  .font(.system(size: 32, weight: .bold))
-                  .padding(.top, 16)
-                  .padding(.bottom, 8)
-                
-                Spacer()
-                Image(systemName: "chevron.down")
-                  .resizable()
-                  .frame(width: 24, height: 24)
-                  .padding(.vertical)
-              }
+            
+            ConversionTypePicker(
+              isOpen: $vm.isConversionTypeSelectorOpen,
+              selectedConversionType: $vm.selectedConversionType
+            ) { type in
+              vm.updateConversionType(to: type)
             }
-            .padding(.vertical, 8)
+            .padding()
             
           }
         }
@@ -82,34 +69,37 @@ struct MainView: View {
         .cornerRadius(8)
         .shadow(radius: 2)
         .padding(.horizontal)
-        .padding(.top, 8)
+        .padding(.top)
         
         ZStack {
           VStack {
             // Input Section
             HStack {
               VStack(alignment: .leading) {
-                Button(action: {
-                  vm.isInputUnitSelectorOpen.toggle()
-                }) {
-                  HStack {
-                    Text("\(vm.selectedInputUnit) (\(vm.selectedInputUnit.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
-//                      .font(.caption)
-                    Spacer()
-                    Image(systemName: "chevron.down")
-                      .resizable()
-                      .frame(width: 24, height: 24)
-                      .padding(.top)
-                      .foregroundColor(.gray)
-                  }
-                }
-                .padding(.vertical, 8)
                 
-                TextField("0", text: $vm.inputValue)
-                  .font(.largeTitle)
-                  .keyboardType(.decimalPad)
-                  .padding(.vertical, 4)
-                  .disabled(true)
+                UnitSelector(
+                  isOpen: $vm.isInputUnitSelectorOpen,
+                  selectedConversionType: vm.selectedConversionType,
+                  selectedUnit: $vm.selectedInputUnit,
+                  units: vm.availableUnits
+                ) { unit in
+                  vm.selectedInputUnit = unit
+                }
+                .padding()
+                
+                HStack(alignment: .lastTextBaseline) {
+                  Text(vm.inputValue)
+                    .font(.largeTitle)
+                    .padding(.vertical, 4)
+//                  TextField("0", text: $vm.inputValue)
+//                    .font(.largeTitle)
+//                    .padding(.vertical, 4)
+//                    .keyboardType(.decimalPad)
+//                    .disabled(true)
+                  Text("\(vm.selectedInputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
+                    .font(.subheadline)
+                }
+                .foregroundColor(.red)
               }
             }
             .padding(.horizontal)
@@ -122,27 +112,26 @@ struct MainView: View {
             // Output Section
             HStack {
               VStack(alignment: .leading) {
-                Button(action: {
-                  vm.isOutputUnitSelectorOpen.toggle()
-                }) {
-                  HStack {
-                    Text("\(vm.selectedOutputUnit) (\(vm.selectedOutputUnit.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
-//                      .font(.caption)
-                    Spacer()
-                    Image(systemName: "chevron.down")
-                      .resizable()
-                      .frame(width: 24, height: 24)
-                      .padding(.top)
-                      .foregroundColor(.gray)
-                  }
-                }
-                .padding(.vertical, 8)
                 
-                Text(vm.outputValue)
-                  .font(.largeTitle)
-                  .padding(.vertical, 4)
+                UnitSelector(
+                  isOpen: $vm.isOutputUnitSelectorOpen,
+                  selectedConversionType: vm.selectedConversionType,
+                  selectedUnit: $vm.selectedOutputUnit,
+                  units: vm.availableUnits
+                ) { unit in
+                  vm.selectedOutputUnit = unit
+                }
+                .padding()
+                
+                HStack(alignment: .lastTextBaseline) {
+                  Text(vm.outputValue)
+                    .font(.largeTitle)
+                    .padding(.vertical, 4)
+                  Text("\(vm.selectedOutputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
+                    .font(.subheadline)
+                }
+                .foregroundColor(.red)
               }
-              Spacer()
             }
             .padding(.horizontal)
             .background(Color.white)
@@ -154,56 +143,19 @@ struct MainView: View {
           
           HStack {
             Spacer()
-            
-            Button(action: {
-              // Swap input and output units
-              let tempUnit = vm.selectedInputUnit
-              vm.selectedInputUnit = vm.selectedOutputUnit
-              vm.selectedOutputUnit = tempUnit
-              
-              let tempValue = vm.inputValue
-              vm.inputValue = vm.outputValue
-              vm.outputValue = tempValue
-            }) {
-              ZStack {
-                Circle()
-                  .fill(Color.gray.opacity(0.3)) // Background color for the circle
-                  .frame(width: 50, height: 50) // Size of the circle
-                
-                Image(systemName: "arrow.up.arrow.down")
-                  .resizable()
-                  .frame(width: 24, height: 24)
-                  .padding()
-              }
+            SwapButton {
+              vm.swapUnits()
             }
+            .padding()
           }
           .padding()
         }
         
         Spacer()
-        
-        // Numeric Keyboard
-        HStack {
-          VStack {
-            ForEach(["789C%", "456÷×", "123-+", ".0⌫±="], id: \.self) { row in
-              HStack {
-                ForEach(row.map { String($0) }, id: \.self) { key in
-                  Button(action: {
-                    handleKeyPress(key)
-                  }) {
-                    Text(key)
-                      .font(.largeTitle)
-                      .frame(maxWidth: .infinity, maxHeight: 64)
-                      .background(Color.gray.opacity(0.3))
-                      .cornerRadius(8)
-                  }
-                }
-              }
-              .padding(.horizontal)
-            }
-          }
+        NumericKeyboard { key in
+          vm.handleKeyPress(key)
         }
-        .padding(.bottom)
+        Spacer()
       }
       
       // Conversion Type Selector Modal
@@ -245,8 +197,6 @@ struct MainView: View {
                   Text(type.id)
                 }
                 .tag(type)
-//                Text(type.id)
-//                  .padding()
               }
             }
           }
@@ -301,47 +251,8 @@ struct MainView: View {
     }
     .background(Color.red.opacity(0.1).edgesIgnoringSafeArea(.all))
   }
-  
-  // Handle keyboard key press logic
-  private func handleKeyPress(_ key: String) {
-    switch key {
-    case "C":
-      vm.inputValue = "0"
-      vm.outputValue = "0"
-    case "⌫":
-      vm.inputValue = String(vm.inputValue.dropLast())
-      if vm.inputValue.isEmpty { vm.inputValue = "0" }
-    default:
-      if vm.inputValue == "0" {
-        vm.inputValue = key
-      } else {
-        vm.inputValue.append(key)
-      }
-    }
-    calculateOutput()
-  }
-  
-  // Convert the input value based on selected units
-  private func calculateOutput() {
-    guard let input = Double(vm.inputValue) else {
-      vm.outputValue = "0"
-      return
-    }
-    
-    let conversionFactor: Double
-    if vm.selectedInputUnit == "Inch" && vm.selectedOutputUnit == "Millimeter" {
-      conversionFactor = 25.4
-    } else if vm.selectedInputUnit == "Millimeter" && vm.selectedOutputUnit == "Inch" {
-      conversionFactor = 0.0393701
-    } else {
-      conversionFactor = 1.0 // Handle similar units or extend logic for others
-    }
-    
-    let result = input * conversionFactor
-    vm.outputValue = String(format: "%.2f", result)
-  }
 }
 
 //#Preview {
-//  MainView()
+//  MainView(vm: MainViewModel())
 //}

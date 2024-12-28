@@ -198,6 +198,12 @@ enum ConversionType: String, CaseIterable, Identifiable {
 //  }
 //}
 
+//extension ConversionType {
+//  var unitTypeNames: [String] {
+//    return unitTypes.map { "\($0)" }
+//  }
+//}
+
 extension ConversionType {
   var unitTypeNames: [String] {
     switch self {
