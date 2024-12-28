@@ -91,11 +91,11 @@ struct MainView: View {
                   Text(vm.inputValue)
                     .font(.largeTitle)
                     .padding(.vertical, 4)
-//                  TextField("0", text: $vm.inputValue)
-//                    .font(.largeTitle)
-//                    .padding(.vertical, 4)
-//                    .keyboardType(.decimalPad)
-//                    .disabled(true)
+                  //                  TextField("0", text: $vm.inputValue)
+                  //                    .font(.largeTitle)
+                  //                    .padding(.vertical, 4)
+                  //                    .keyboardType(.decimalPad)
+                  //                    .disabled(true)
                   Text("\(vm.selectedInputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
                     .font(.subheadline)
                 }
@@ -161,15 +161,10 @@ struct MainView: View {
       // Conversion Type Selector Modal
       if vm.isConversionTypeSelectorOpen {
         VStack {
-          HStack {
-            TextField("Search...", text: $vm.searchQuery)
-              .textFieldStyle(RoundedBorderTextFieldStyle())
-              .padding(.horizontal)
-            Button("Close") {
-              vm.isConversionTypeSelectorOpen = false
-            }
-            .padding(.trailing)
-          }
+          SelectionModal(
+            isOpen: .combine($vm.isConversionTypeSelectorOpen),
+            searchQuery: $vm.searchQuery
+          )
           List {
             ForEach(ConversionType.allCases.filter {
               vm.searchQuery.isEmpty || $0.id.lowercased().contains(vm.searchQuery.lowercased())
@@ -212,16 +207,10 @@ struct MainView: View {
       // Unit Selector Modal
       if vm.isInputUnitSelectorOpen || vm.isOutputUnitSelectorOpen {
         VStack {
-          HStack {
-            TextField("Search...", text: $vm.searchQuery)
-              .textFieldStyle(RoundedBorderTextFieldStyle())
-              .padding(.horizontal)
-            Button("Close") {
-              vm.isInputUnitSelectorOpen = false
-              vm.isOutputUnitSelectorOpen = false
-            }
-            .padding(.trailing)
-          }
+          SelectionModal(
+            isOpen: .combine($vm.isInputUnitSelectorOpen, $vm.isOutputUnitSelectorOpen),
+            searchQuery: $vm.searchQuery
+          )
           List {
             ForEach(vm.selectedConversionType.unitTypeNames.filter {
               vm.searchQuery.isEmpty || $0.lowercased().contains(vm.searchQuery.lowercased())
@@ -256,3 +245,17 @@ struct MainView: View {
 //#Preview {
 //  MainView(vm: MainViewModel())
 //}
+extension Binding where Value == [Bool] {
+  static func combine(_ bindings: Binding<Bool>...) -> Binding<[Bool]> {
+    Binding<[Bool]>(
+      get: { bindings.map { $0.wrappedValue } },
+      set: { newValue in
+        for (index, binding) in bindings.enumerated() {
+          if index < newValue.count {
+            binding.wrappedValue = newValue[index]
+          }
+        }
+      }
+    )
+  }
+}
