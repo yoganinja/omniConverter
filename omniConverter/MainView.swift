@@ -46,62 +46,87 @@ struct PlayView: View {
 
 struct MainView: View {
   @StateObject var vm: MainViewModel
+  @State var selection: String = "Juan"
   
   var body: some View {
-    ZStack {
+    NavigationStack {
       VStack {
         // Conversion Type Section
         HStack {
-          VStack(alignment: .leading) {
-            
-            ConversionTypePicker(
-              isOpen: $vm.isConversionTypeSelectorOpen,
-              selectedConversionType: $vm.selectedConversionType
-            ) { type in
-              vm.updateConversionType(to: type)
+          ValuePicker(
+            title: {
+              HStack(alignment: .center) {
+                Image(systemName: vm.selectedConversionType.imageName)
+                  .resizable()
+                  .frame(width: 24, height: 24)
+                  .padding(.vertical)
+                Text(vm.selectedConversionType.id)
+                  .font(.system(size: 32, weight: .bold))
+                  .padding(.top, 16)
+                  .padding(.bottom, 8)
+                Spacer()
+                Image(systemName: "chevron.down")
+                  .resizable()
+                  .frame(width: 24, height: 24)
+                  .padding(.vertical, 40)
+              }
+              .padding(.vertical, 8)
+            },
+            selection: $vm.selectedConversionType,
+            isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
+          ) {
+            ForEach(ConversionType.allCases, id: \.self) { name in
+              Text(verbatim: name.id)
+                .pickerTag(name)
             }
-            .padding()
-            
           }
         }
+        .frame(maxWidth: .infinity, maxHeight: 120)
         .padding(.horizontal)
         .background(Color.white)
         .cornerRadius(8)
         .shadow(radius: 2)
         .padding(.horizontal)
         .padding(.top)
-        
+       
         ZStack {
           VStack {
             // Input Section
             HStack {
-              VStack(alignment: .leading) {
-                
-                UnitSelector(
-                  isOpen: $vm.isInputUnitSelectorOpen,
-                  selectedConversionType: vm.selectedConversionType,
-                  selectedUnit: $vm.selectedInputUnit,
-                  units: vm.availableUnits
-                ) { unit in
-                  vm.selectedInputUnit = unit
+              ValuePicker(
+                title: {
+                  VStack(alignment: .leading) {
+                    HStack(alignment: .center) {
+                      Text("\(vm.selectedInputUnit) (\(vm.selectedInputUnit.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
+                      Spacer()
+                      Image(systemName: "chevron.down")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .padding(.top)
+                      //          .foregroundColor(.gray)
+                    }
+                    .padding(.vertical, 8)
+                    
+                    HStack(alignment: .lastTextBaseline) {
+                      Text(vm.inputValue)
+                        .font(.largeTitle)
+                        .padding(.vertical, 4)
+                      Text("\(vm.selectedInputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
+                        .font(.subheadline)
+                    }
+                    .foregroundColor(.red)
+                  }
+                },
+                selection: $vm.selectedInputUnit,
+                isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
+              ) {
+                ForEach(vm.selectedConversionType.unitTypeNames, id: \.self) { name in
+                  Text(verbatim: name)
+                    .pickerTag(name)
                 }
-                .padding()
-                
-                HStack(alignment: .lastTextBaseline) {
-                  Text(vm.inputValue)
-                    .font(.largeTitle)
-                    .padding(.vertical, 4)
-                  //                  TextField("0", text: $vm.inputValue)
-                  //                    .font(.largeTitle)
-                  //                    .padding(.vertical, 4)
-                  //                    .keyboardType(.decimalPad)
-                  //                    .disabled(true)
-                  Text("\(vm.selectedInputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
-                    .font(.subheadline)
-                }
-                .foregroundColor(.red)
               }
             }
+            .frame(maxWidth: .infinity, maxHeight: 120)
             .padding(.horizontal)
             .background(Color.white)
             .cornerRadius(8)
@@ -109,36 +134,49 @@ struct MainView: View {
             .padding(.horizontal)
             .padding(.top)
             
+            
             // Output Section
             HStack {
-              VStack(alignment: .leading) {
-                
-                UnitSelector(
-                  isOpen: $vm.isOutputUnitSelectorOpen,
-                  selectedConversionType: vm.selectedConversionType,
-                  selectedUnit: $vm.selectedOutputUnit,
-                  units: vm.availableUnits
-                ) { unit in
-                  vm.selectedOutputUnit = unit
+              ValuePicker(
+                title: {
+                  VStack(alignment: .leading) {
+                    HStack(alignment: .center) {
+                      Text("\(vm.selectedOutputUnit) (\(vm.selectedOutputUnit.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
+                      Spacer()
+                      Image(systemName: "chevron.down")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .padding(.top)
+                      //          .foregroundColor(.gray)
+                    }
+                    .padding(.vertical, 8)
+                    
+                    HStack(alignment: .lastTextBaseline) {
+                      Text(vm.outputValue)
+                        .font(.largeTitle)
+                        .padding(.vertical, 4)
+                      Text("\(vm.selectedOutputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
+                        .font(.subheadline)
+                    }
+                    .foregroundColor(.red)
+                  }
+                },
+                selection: $vm.selectedOutputUnit,
+                isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
+              ) {
+                ForEach(vm.selectedConversionType.unitTypeNames, id: \.self) { name in
+                  Text(verbatim: name)
+                    .pickerTag(name)
                 }
-                .padding()
-                
-                HStack(alignment: .lastTextBaseline) {
-                  Text(vm.outputValue)
-                    .font(.largeTitle)
-                    .padding(.vertical, 4)
-                  Text("\(vm.selectedOutputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
-                    .font(.subheadline)
-                }
-                .foregroundColor(.red)
               }
             }
+            .frame(maxWidth: .infinity, maxHeight: 120)
             .padding(.horizontal)
             .background(Color.white)
             .cornerRadius(8)
             .shadow(radius: 2)
             .padding(.horizontal)
-            .padding(.top, 8)
+            .padding(.top)
           }
           
           HStack {
@@ -150,95 +188,14 @@ struct MainView: View {
           }
           .padding()
         }
-        
         Spacer()
         NumericKeyboard { key in
           vm.handleKeyPress(key)
         }
         Spacer()
       }
-      
-      // Conversion Type Selector Modal
-      if vm.isConversionTypeSelectorOpen {
-        VStack {
-          SelectionModal(
-            isOpen: .combine($vm.isConversionTypeSelectorOpen),
-            searchQuery: $vm.searchQuery
-          )
-          List {
-            ForEach(ConversionType.allCases.filter {
-              vm.searchQuery.isEmpty || $0.id.lowercased().contains(vm.searchQuery.lowercased())
-            }, id: \.self) { type in
-              Button(action: {
-                if vm.isConversionTypeSelectorOpen {
-                  vm.selectedConversionType = type
-                  vm.isConversionTypeSelectorOpen = false
-                  
-                  // Automatically set the input and output units based on the selected conversion type
-                  if let firstUnit = vm.selectedConversionType.unitTypeNames.map({$0}).first
-                  {
-                    vm.selectedInputUnit = "\(firstUnit)"
-                  }
-                  if let secondUnit = vm.selectedConversionType.unitTypeNames.dropFirst().first {
-                    vm.selectedOutputUnit = "\(secondUnit)"
-                  } else if let secondUnit = vm.selectedConversionType.unitTypeNames.map({$0}).first {
-                    vm.selectedOutputUnit = "\(secondUnit)"
-                  }
-                  
-                }
-              }) {
-                HStack {
-                  Image(systemName: type.imageName)
-                  Text(type.id)
-                }
-                .tag(type)
-              }
-            }
-          }
-        }
-        .background(Color.white)
-        .cornerRadius(8)
-        .shadow(radius: 4)
-        .padding()
-        .transition(.opacity)
-        .zIndex(1)
-      }
-      
-      // Unit Selector Modal
-      if vm.isInputUnitSelectorOpen || vm.isOutputUnitSelectorOpen {
-        VStack {
-          SelectionModal(
-            isOpen: .combine($vm.isInputUnitSelectorOpen, $vm.isOutputUnitSelectorOpen),
-            searchQuery: $vm.searchQuery
-          )
-          List {
-            ForEach(vm.selectedConversionType.unitTypeNames.filter {
-              vm.searchQuery.isEmpty || $0.lowercased().contains(vm.searchQuery.lowercased())
-            }, id: \.self) { unit in
-              Button(action: {
-                if vm.isInputUnitSelectorOpen {
-                  vm.selectedInputUnit = unit
-                  vm.isInputUnitSelectorOpen = false
-                } else if vm.isOutputUnitSelectorOpen {
-                  vm.selectedOutputUnit = unit
-                  vm.isOutputUnitSelectorOpen = false
-                }
-              }) {
-                Text(unit)
-                  .padding()
-              }
-            }
-          }
-        }
-        .background(Color.white)
-        .cornerRadius(8)
-        .shadow(radius: 4)
-        .padding()
-        .transition(.opacity)
-        .zIndex(1)
-      }
+      .background(Color.red.opacity(0.1).edgesIgnoringSafeArea(.all))
     }
-    .background(Color.red.opacity(0.1).edgesIgnoringSafeArea(.all))
   }
 }
 
