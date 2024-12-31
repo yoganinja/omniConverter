@@ -16,6 +16,7 @@ struct SelectionModal: View {
       TextField("Search...", text: $searchQuery)
         .textFieldStyle(RoundedBorderTextFieldStyle())
         .padding(.horizontal)
+        .padding(.top)
       Button("Close") {
         for index in isOpen.indices {
           isOpen[index] = false
