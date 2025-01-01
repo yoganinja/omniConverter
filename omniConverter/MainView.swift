@@ -80,6 +80,18 @@ struct MainView: View {
                 .pickerTag(name)
             }
           }
+          .onChange(of: vm.selectedConversionType) {_ in
+            // Automatically set the input and output units based on the selected conversion type
+            if let firstUnit = vm.selectedConversionType.unitTypeNames.map({$0}).first
+            {
+              vm.selectedInputUnit = "\(firstUnit)"
+            }
+            if let secondUnit = vm.selectedConversionType.unitTypeNames.dropFirst().first {
+              vm.selectedOutputUnit = "\(secondUnit)"
+            } else if let secondUnit = vm.selectedConversionType.unitTypeNames.map({$0}).first {
+              vm.selectedOutputUnit = "\(secondUnit)"
+            }
+          }
         }
         .frame(maxWidth: .infinity, maxHeight: 120)
         .padding(.horizontal)
