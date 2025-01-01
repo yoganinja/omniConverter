@@ -38,6 +38,8 @@ extension MainViewModel {
 //    let tempValue = inputValue
 //    inputValue = outputValue
 //    outputValue = tempValue
+    
+    calculateOutput()
   }
   
   // Handle keyboard key press logic
@@ -67,9 +69,9 @@ extension MainViewModel {
     }
     
     let conversionFactor: Double
-    if selectedInputUnit == "Inch" && selectedOutputUnit == "Millimeter" {
+    if selectedInputUnit == "Inches" && selectedOutputUnit == "Millimeters" {
       conversionFactor = 25.4
-    } else if selectedInputUnit == "Millimeter" && selectedOutputUnit == "Inch" {
+    } else if selectedInputUnit == "Millimeters" && selectedOutputUnit == "Inches" {
       conversionFactor = 0.0393701
     } else {
       conversionFactor = 1.0 // Handle similar units or extend logic for others
