@@ -133,7 +133,7 @@ struct MainView: View {
                 isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
               ) {
                 ForEach(vm.selectedConversionType.unitTypeNames, id: \.self) { name in
-                  Text(verbatim: name)
+                  Text(verbatim: "\(name) (\(name.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
                     .pickerTag(name)
                 }
               }
@@ -177,7 +177,7 @@ struct MainView: View {
                 isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
               ) {
                 ForEach(vm.selectedConversionType.unitTypeNames, id: \.self) { name in
-                  Text(verbatim: name)
+                  Text(verbatim: "\(name) (\(name.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
                     .pickerTag(name)
                 }
               }
