@@ -46,7 +46,6 @@ struct PlayView: View {
 
 struct MainView: View {
   @StateObject var vm: MainViewModel
-  @State var selection: String = "Juan"
   
   var body: some View {
     NavigationStack {
@@ -65,7 +64,7 @@ struct MainView: View {
                   .padding(.top, 16)
                   .padding(.bottom, 8)
                 Spacer()
-                Image(systemName: "chevron.down")
+                Image(systemName: "chevron.right")
                   .resizable()
                   .frame(width: 24, height: 24)
                   .padding(.vertical, 40)
@@ -111,7 +110,7 @@ struct MainView: View {
                     HStack(alignment: .center) {
                       Text("\(vm.selectedInputUnit) (\(vm.selectedInputUnit.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
                       Spacer()
-                      Image(systemName: "chevron.down")
+                      Image(systemName: "chevron.right")
                         .resizable()
                         .frame(width: 24, height: 24)
                         .padding(.top)
@@ -155,7 +154,7 @@ struct MainView: View {
                     HStack(alignment: .center) {
                       Text("\(vm.selectedOutputUnit) (\(vm.selectedOutputUnit.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
                       Spacer()
-                      Image(systemName: "chevron.down")
+                      Image(systemName: "chevron.right")
                         .resizable()
                         .frame(width: 24, height: 24)
                         .padding(.top)
