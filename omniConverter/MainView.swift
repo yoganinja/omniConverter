@@ -7,42 +7,42 @@
 
 import SwiftUI
 
-struct PlayView: View {
-  let types = ConversionType.allCases
-  let unitNames = ConversionType.length.unitTypeNames
-//  let units = Length.allUnitCases
-  @State private var selectedConversionTypeUnits: [Unit]// = ConversionType.length.allUnitCases
-  
-  var body: some View {
+//struct PlayView: View {
+//  let types = ConversionType.allCases
+//  let unitNames = ConversionType.length.unitTypeNames
+////  let units = Length.allUnitCases
+//  @State private var selectedConversionTypeUnits: [Unit]// = ConversionType.length.allUnitCases
+//  
+//  var body: some View {
+////    ForEach(types, id: \.self) { type in
+////      List {
+////        ForEach(type.unitTypeNames) { unit in
+////          Text("\(unit.id)")
+////            .padding()
+////        }
+////      }
+////    }
+//    
 //    ForEach(types, id: \.self) { type in
+////      Text(type.id.unit?.symbol ?? "")
+////      Text(type.unitType.debugDescription())
+//      
 //      List {
-//        ForEach(type.unitTypeNames) { unit in
-//          Text("\(unit.id)")
+//        ForEach(type.unitTypeNames, id: \.self) { unit in
+//          Text(unit)
 //            .padding()
 //        }
 //      }
 //    }
-    
-    ForEach(types, id: \.self) { type in
-//      Text(type.id.unit?.symbol ?? "")
-//      Text(type.unitType.debugDescription())
-      
-      List {
-        ForEach(type.unitTypeNames, id: \.self) { unit in
-          Text(unit)
-            .padding()
-        }
-      }
-    }
-    
-    List {
-      ForEach(unitNames, id: \.self) { unit in
-        Text(unit)
-          .padding()
-      }
-    }
-  }
-}
+//    
+//    List {
+//      ForEach(unitNames, id: \.self) { unit in
+//        Text(unit)
+//          .padding()
+//      }
+//    }
+//  }
+//}
 
 struct MainView: View {
   @StateObject var vm: MainViewModel
@@ -80,16 +80,7 @@ struct MainView: View {
             }
           }
           .onChange(of: vm.selectedConversionType) {_ in
-            // Automatically set the input and output units based on the selected conversion type
-            if let firstUnit = vm.selectedConversionType.unitTypeNames.map({$0}).first
-            {
-              vm.selectedInputUnit = "\(firstUnit)"
-            }
-            if let secondUnit = vm.selectedConversionType.unitTypeNames.dropFirst().first {
-              vm.selectedOutputUnit = "\(secondUnit)"
-            } else if let secondUnit = vm.selectedConversionType.unitTypeNames.map({$0}).first {
-              vm.selectedOutputUnit = "\(secondUnit)"
-            }
+            vm.updateConversionType()
           }
         }
         .frame(maxWidth: .infinity, maxHeight: 120)
@@ -136,6 +127,9 @@ struct MainView: View {
                     .pickerTag(name)
                 }
               }
+              .onChange(of: vm.selectedInputUnit) {_ in
+                vm.updateInputUnit()
+              }
             }
             .frame(maxWidth: .infinity, maxHeight: 120)
             .padding(.horizontal)
@@ -180,6 +174,9 @@ struct MainView: View {
                     .pickerTag(name)
                 }
               }
+              .onChange(of: vm.selectedOutputUnit) {_ in
+                vm.updateOutputUnit()
+              }
             }
             .frame(maxWidth: .infinity, maxHeight: 120)
             .padding(.horizontal)
@@ -213,17 +210,3 @@ struct MainView: View {
 //#Preview {
 //  MainView(vm: MainViewModel())
 //}
-extension Binding where Value == [Bool] {
-  static func combine(_ bindings: Binding<Bool>...) -> Binding<[Bool]> {
-    Binding<[Bool]>(
-      get: { bindings.map { $0.wrappedValue } },
-      set: { newValue in
-        for (index, binding) in bindings.enumerated() {
-          if index < newValue.count {
-            binding.wrappedValue = newValue[index]
-          }
-        }
-      }
-    )
-  }
-}
