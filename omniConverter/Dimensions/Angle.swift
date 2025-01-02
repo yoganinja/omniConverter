@@ -17,45 +17,19 @@ enum Angle: String, CaseIterable, Identifiable {
   case revolutions = "Revolutions"
   
   var id: String { self.rawValue }
-
-  static var allUnitCases: [UnitAngle] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
-    }
-  }
   
-  /// Unit representation of a case
-  var toUnit: UnitAngle? {
-    get {
-      if let _ = Angle.allCases.firstIndex(of: self) {
-        return self.rawValue.toUnit
-      }
-      
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitAngle? {
+    if let unit = UnitAngle.allUnits[name] {
+      return unit
+    } else {
       return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  //    static func name(from stringName: String) -> UnitAngle? {
-  //        for item in allCases {
-  //            if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-  //                let itemIndex = allCases.index(of: item)
-  //                let lookupItem = allUnitCases[itemIndex!]
-  //                return lookupItem
-  //            }
-  //        }
-  //
-  //        return nil
-  //    }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = stringFrom.toUnit // self.name(from: stringFrom)
-    let to = stringTo.toUnit // self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -68,14 +42,27 @@ enum Angle: String, CaseIterable, Identifiable {
 }
 
 extension UnitAngle {
-  static let allUnits: [String: UnitAngle] = [
-    "Arc Minutes": .arcMinutes,
-    "Arc Seconds": .arcSeconds,
-    "Degrees": .degrees,
-    "Gradians": .gradians,
-    "Radians": .radians,
-    "Revolutions": .revolutions
-  ]
+  static let allUnits: [String: UnitAngle] = {
+    Angle.allCases.reduce(into: [String: UnitAngle]()) { dict, type in
+      switch type {
+      case .arcMinutes:
+        dict[type.rawValue] = .arcMinutes
+      case .arcSeconds:
+        dict[type.rawValue] = .arcSeconds
+      case .degrees:
+        dict[type.rawValue] = .degrees
+      case .gradians:
+        dict[type.rawValue] = .gradians
+      case .radians:
+        dict[type.rawValue] = .radians
+      case .revolutions:
+        dict[type.rawValue] = .revolutions
+      }
+    }
+  }()
+  
+  static let allCases: [UnitAngle] =
+  Angle.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

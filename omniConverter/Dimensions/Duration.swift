@@ -15,40 +15,18 @@ enum Duration: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitDuration] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
-    }
-  }
-  
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitDuration? {
-    if let aaa = UnitDuration.allUnits[stringName] {
-      return aaa
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitDuration? {
+    if let unit = UnitDuration.allUnits[name] {
+      return unit
     } else {
       return nil
     }
-    
-    
-//    for item in allCases {
-//      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-//        let itemIndex = allCases.firstIndex(of: item)
-//        let lookupItem = allUnitCases[itemIndex!]
-//        return lookupItem
-//      }
-//    }
-//    
-//    return nil
   }
   
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -61,11 +39,21 @@ enum Duration: String, CaseIterable, Identifiable {
 }
 
 extension UnitDuration {
-  static let allUnits: [String: UnitDuration] = [
-    "Hours": .hours,
-    "Minutes": .minutes,
-    "Seconds": .seconds
-  ]
+  static let allUnits: [String: UnitDuration] = {
+    Duration.allCases.reduce(into: [String: UnitDuration]()) { dict, type in
+      switch type {
+      case .hours:
+        dict[type.rawValue] = .hours
+      case .minutes:
+        dict[type.rawValue] = .minutes
+      case .seconds:
+        dict[type.rawValue] = .seconds
+      }
+    }
+  }()
+  
+    static let allCases: [UnitDuration] =
+    Duration.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

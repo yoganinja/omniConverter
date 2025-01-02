@@ -8,15 +8,7 @@
 
 import Foundation
 
-//struct LengthUnit: ConvertibleUnit {
-//    static func convert(value: Double, from inputUnit: UnitLength, to outputUnit: UnitLength) -> Double {
-//        let inputMeasurement = Measurement(value: value, unit: inputUnit)
-//        let outputMeasurement = inputMeasurement.converted(to: outputUnit)
-//        return outputMeasurement.value
-//    }
-//}
-
-enum Length: String, CaseIterable, Identifiable { //, ConvertibleUnit {
+enum Length: String, CaseIterable, Identifiable {
   case angstroms = "Angstroms"
   case astronomicalUnits = "Astronomical Units"
   case centimeters = "Centimeters"
@@ -45,116 +37,123 @@ enum Length: String, CaseIterable, Identifiable { //, ConvertibleUnit {
   
   var id: String { self.rawValue }
   
-//  static var allUnitCases: [UnitLength] {
-//    get {
-//      return toUnitCases(allStringCases: allCases.toStrings)
-//    }
-//  }
-  
-//  var toString: String {
-//    get {
-//      return String(describing: self)
-//    }
-//  }
-  
-  static func name(from stringName: String) -> UnitLength? {
-    if let aaa = UnitLength.allUnits[stringName] {
-      return aaa
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitLength? {
+    if let unit = UnitLength.allUnits[name] {
+      return unit
     } else {
       return nil
     }
-    
-    
-//    for item in allCases {
-//      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-//        let itemIndex = allCases.firstIndex(of: item)
-//        let lookupItem = allUnitCases[itemIndex!]
-//        return lookupItem
-//      }
-//    }
-//    
-//    return nil
   }
   
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
     return result
   }
   
-  static func convert(value: Double, from inputUnit: UnitLength, to outputUnit: UnitLength) -> Double {
-      let inputMeasurement = Measurement(value: value, unit: inputUnit)
-      let outputMeasurement = inputMeasurement.converted(to: outputUnit)
-    let output = outputMeasurement.value
-    return output
+  static func convert(value: Double, from: UnitLength, to: UnitLength) -> Double {
+    return Measurement(value: value, unit: from).converted(to: to).value
   }
-  
-//  static func convert(value: Double, from: UnitLength, to: UnitLength) -> Double {
-//    return Measurement(value: value, unit: from).converted(to: to).value
-//  }
 }
 
 extension UnitLength {
-  static let allUnits: [String: UnitLength] = [
-    "Angstroms": .angstroms,
-    "Astronomical Units": .astronomicalUnits,
-    "Centimeters": .centimeters,
-    "Decameters": .decameters,
-    "Decimeters": .decimeters,
-    "Fathoms": .fathoms,
-    "Feet": .feet,
-    "Furlongs": .furlongs,
-    "Hectometers": .hectometers,
-    "Inches": .inches,
-    "Kilometers": .kilometers,
-    "Leagues": .leagues,
-    "Lightyears": .lightyears,
-    "Megameters": .megameters,
-    "Meters": .meters,
-    "Micrometers": .micrometers,
-    "Miles": .miles,
-    "Millimeters": .millimeters,
-    "Nanometers": .nanometers,
-    "Nautical Leagues": .nauticalLeagues,
-    "Nautical Miles": .nauticalMiles,
-    "Parsecs": .parsecs,
-    "Picometers": .picometers,
-    "Scandinavian Miles": .scandinavianMiles,
-    "Yards": .yards
-  ]
+  static let allUnits: [String: UnitLength] = {
+    Length.allCases.reduce(into: [String: UnitLength]()) { dict, type in
+      switch type {
+      case .angstroms:
+        dict[type.rawValue] = .angstroms
+      case .astronomicalUnits:
+        dict[type.rawValue] = .astronomicalUnits
+      case .centimeters:
+        dict[type.rawValue] = .centimeters
+      case .decameters:
+        dict[type.rawValue] = .decameters
+      case .decimeters:
+        dict[type.rawValue] = .decimeters
+      case .fathoms:
+        dict[type.rawValue] = .fathoms
+      case .feet:
+        dict[type.rawValue] = .feet
+      case .furlongs:
+        dict[type.rawValue] = .furlongs
+      case .hectometers:
+        dict[type.rawValue] = .hectometers
+      case .inches:
+        dict[type.rawValue] = .inches
+      case .kilometers:
+        dict[type.rawValue] = .kilometers
+      case .leagues:
+        dict[type.rawValue] = .leagues
+      case .lightyears:
+        dict[type.rawValue] = .lightyears
+      case .megameters:
+        dict[type.rawValue] = .megameters
+      case .meters:
+        dict[type.rawValue] = .meters
+      case .micrometers:
+        dict[type.rawValue] = .micrometers
+      case .miles:
+        dict[type.rawValue] = .miles
+      case .millimeters:
+        dict[type.rawValue] = .millimeters
+      case .nanometers:
+        dict[type.rawValue] = .nanometers
+      case .nauticalLeagues:
+        dict[type.rawValue] = .nauticalLeagues
+      case .nauticalMiles:
+        dict[type.rawValue] = .nauticalMiles
+      case .parsecs:
+        dict[type.rawValue] = .parsecs
+      case .picometers:
+        dict[type.rawValue] = .picometers
+      case .scandinavianMiles:
+        dict[type.rawValue] = .scandinavianMiles
+      case .yards:
+        dict[type.rawValue] = .yards
+      }
+    }
+  }()
+  
+  static let allCases: [UnitLength] =
+  Length.allCases.compactMap { $0.id.toUnit }
 }
 
-//extension UnitLength {
-//    static let allUnits: [String: UnitLength] = [
-//        "meters": .meters,
-//        "kilometers": .kilometers,
-//        "inches": .inches,
-//        "feet": .feet,
-//        "yards": .yards,
-//        "miles": .miles
-//    ]
-//}
+extension String {
+  fileprivate var toUnit: UnitLength? {
+    if let v = UnitLength.value(forKey: self) {
+      if let value = v as? UnitLength {
+        return value
+      }
+    }
+
+    return nil
+  }
+}
 
 extension UnitLength {
   static var nauticalLeagues: UnitLength {
     // 1 nauticalLeague = 5556 meters
-    return UnitLength(symbol: "3NM",
-                      converter: UnitConverterLinear(coefficient: 5556))
+    return UnitLength(
+      symbol: "3NM",
+      converter: UnitConverterLinear(coefficient: 5556))
   }
   
   static var leagues: UnitLength {
     // 1 league = 4828 meters
-    return UnitLength(symbol: "leag",
-                      converter: UnitConverterLinear(coefficient: 4828))
+    return UnitLength(
+      symbol: "leag",
+      converter: UnitConverterLinear(coefficient: 4828))
   }
   
   static var angstroms: UnitLength {
     // 1 angstrom = .00000000001 meters
-    return UnitLength(symbol: "Å",
-                      converter: UnitConverterLinear(coefficient: 1.0e-10))
+    return UnitLength(
+      symbol: "Å",
+      converter: UnitConverterLinear(coefficient: 1.0e-10))
   }
 }
 
@@ -168,21 +167,5 @@ extension UnitLength: UnitProduct {
   static func defaultUnitMapping() -> (UnitSpeed, UnitDuration, UnitLength) {
     return (.metersPerSecond, .seconds, .meters)
   }
-}
-
-extension String {
-//  var unit: UnitLength? {
-//    return self.toUnit(of: UnitLength.self)
-//  }
-  
-//  fileprivate var toUnit: UnitLength? {
-//    if let v = UnitLength.value(forKey: self) {
-//      if let value = v as? UnitLength {
-//        return value
-//      }
-//    }
-//
-//    return nil
-//  }
 }
 

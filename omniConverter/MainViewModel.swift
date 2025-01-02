@@ -66,40 +66,40 @@ extension MainViewModel {
     calculateOutput()
   }
   
-  private func resolveUnit(from unitName: String, for type: ConversionType) -> Dimension? {
-      switch type {
-      case .length:
-        
-        
-        if let aaa = UnitLength.allUnits[unitName] {
-          return aaa
-        } else {
-          return nil
-        }
-        
-        
-        
-        
-        
+//  private func resolveUnit(from unitName: String, for type: ConversionType) -> Dimension? {
+//      switch type {
+//      case .length:
+//        
+//        
+//        if let aaa = UnitLength.allUnits[unitName] {
+//          return aaa
+//        } else {
+//          return nil
+//        }
+//        
+//        
+//        
+//        
+//        
+////          switch unitName {
+////          case "Inches": return UnitLength.inches
+////          case "Millimeters": return UnitLength.millimeters
+////          case "Centimeters": return UnitLength.centimeters
+////          case "Meters": return UnitLength.meters
+////          case "Nanometers": return UnitLength.nanometers
+////          default: return nil
+////          }
+//      case .duration:
 //          switch unitName {
-//          case "Inches": return UnitLength.inches
-//          case "Millimeters": return UnitLength.millimeters
-//          case "Centimeters": return UnitLength.centimeters
-//          case "Meters": return UnitLength.meters
-//          case "Nanometers": return UnitLength.nanometers
+//          case "Hours": return UnitDuration.hours
+//          case "Minutes": return UnitDuration.minutes
+//          case "Seconds": return UnitDuration.seconds
 //          default: return nil
 //          }
-      case .duration:
-          switch unitName {
-          case "Hours": return UnitDuration.hours
-          case "Minutes": return UnitDuration.minutes
-          case "Seconds": return UnitDuration.seconds
-          default: return nil
-          }
-      default:
-          return nil
-      }
-  }
+//      default:
+//          return nil
+//      }
+//  }
 
 //  private func resolveUnit(from unitName: String, for type: ConversionType) -> Dimension? {
 //    let inputMeasurement = Measurement(value: 1, unit: UnitLength.inches)
@@ -144,10 +144,14 @@ extension MainViewModel {
     //    }
 
     switch selectedConversionType {
-    case .length:
-        result = Length.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .angle:
+      result = Angle.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .duration:
         result = Duration.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .electricCharge:
+      result = ElectricCharge.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .length:
+        result = Length.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     default:
         result = 0.0
     }
