@@ -13,33 +13,18 @@ enum Dispersion: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitDispersion] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitDispersion? {
+    if let unit = UnitDispersion.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitDispersion? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -52,9 +37,17 @@ enum Dispersion: String, CaseIterable, Identifiable {
 }
 
 extension UnitDispersion {
-  static let allUnits: [String: UnitDispersion] = [
-    "Parts per Million": .partsPerMillion
-  ]
+  static let allUnits: [String: UnitDispersion] = {
+    Dispersion.allCases.reduce(into: [String: UnitDispersion]()) { dict, type in
+      switch type {
+      case .partsPerMillion:
+        dict[type.rawValue] = .partsPerMillion
+      }
+    }
+  }()
+  
+  static let allCases: [UnitDispersion] =
+  Dispersion.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

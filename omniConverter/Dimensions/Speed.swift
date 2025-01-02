@@ -16,33 +16,18 @@ enum Speed: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitSpeed] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitSpeed? {
+    if let unit = UnitSpeed.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitSpeed? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -55,12 +40,23 @@ enum Speed: String, CaseIterable, Identifiable {
 }
 
 extension UnitSpeed {
-  static let allUnits: [String: UnitSpeed] = [
-    "Kilometers per Hour": .kilometersPerHour,
-    "Knots": .knots,
-    "Meters per Second": .metersPerSecond,
-    "Miles per Hour": .milesPerHour
-  ]
+  static let allUnits: [String: UnitSpeed] = {
+    Speed.allCases.reduce(into: [String: UnitSpeed]()) { dict, type in
+      switch type {
+      case .kilometersPerHour:
+        dict[type.rawValue] = .kilometersPerHour
+      case .knots:
+        dict[type.rawValue] = .knots
+      case .metersPerSecond:
+        dict[type.rawValue] = .metersPerSecond
+      case .milesPerHour:
+        dict[type.rawValue] = .milesPerHour
+      }
+    }
+  }()
+  
+  static let allCases: [UnitSpeed] =
+  Speed.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

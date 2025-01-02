@@ -144,16 +144,52 @@ extension MainViewModel {
     //    }
 
     switch selectedConversionType {
+    case .acceleration:
+      result = Acceleration.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .angle:
       result = Angle.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .area:
+      result = Area.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .density:
+      result = Density.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .duration:
         result = Duration.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .electricCharge:
       result = ElectricCharge.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .length:
         result = Length.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
-    default:
-        result = 0.0
+    case .dispersion:
+      result = Dispersion.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .electricCurrent:
+      result = ElectricCurrent.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .electricPotentialDifference:
+      result = ElectricPotentialDifference.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .electricResistance:
+      result = ElectricResistance.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .energy:
+      result = Energy.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .frequency:
+      result = Frequency.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .fuelEfficiency:
+      result = FuelEfficiency.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .illuminance:
+      result = Illuminance.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .mass:
+      result = Mass.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .power:
+      result = Power.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .pressure:
+      result = Pressure.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .radiationDose:
+      result = RadiationDose.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .radioactivity:
+      result = Radioactivity.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .speed:
+      result = Speed.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .temperature:
+      result = Temperature.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .volume:
+      result = Volume.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     }
 
 //    if selectedConversionType == .duration {

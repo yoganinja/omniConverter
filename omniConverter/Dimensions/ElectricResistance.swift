@@ -17,33 +17,18 @@ enum ElectricResistance: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitElectricResistance] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitElectricResistance? {
+    if let unit = UnitElectricResistance.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitElectricResistance? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -56,13 +41,25 @@ enum ElectricResistance: String, CaseIterable, Identifiable {
 }
 
 extension UnitElectricResistance {
-  static let allUnits: [String: UnitElectricResistance] = [
-    "Kiloohms": .kiloohms,
-    "Megaohms": .megaohms,
-    "Microohms": .microohms,
-    "Milliohms": .milliohms,
-    "Ohms": .ohms
-  ]
+  static let allUnits: [String: UnitElectricResistance] = {
+    ElectricResistance.allCases.reduce(into: [String: UnitElectricResistance]()) { dict, type in
+      switch type {
+      case .kiloohms:
+        dict[type.rawValue] = .kiloohms
+      case .megaohms:
+        dict[type.rawValue] = .megaohms
+      case .microohms:
+        dict[type.rawValue] = .microohms
+      case .milliohms:
+        dict[type.rawValue] = .milliohms
+      case .ohms:
+        dict[type.rawValue] = .ohms
+      }
+    }
+  }()
+  
+  static let allCases: [UnitElectricResistance] =
+  ElectricResistance.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

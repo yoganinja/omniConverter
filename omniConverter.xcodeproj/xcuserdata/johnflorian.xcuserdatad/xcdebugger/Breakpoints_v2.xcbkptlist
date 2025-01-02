@@ -23,68 +23,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D1B67477-538B-4189-A49A-11F3849D1834"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "omniConverter/ConversionType.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "322"
-            endingLineNumber = "322"
-            landmarkName = "unit(for:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "FF1ACA58-CD87-47E3-B9AE-6971C95D285B"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "omniConverter/ConversionType.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "341"
-            endingLineNumber = "341"
-            landmarkName = "toUnitCases(allStringCases:)"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  uuid = "FF1ACA58-CD87-47E3-B9AE-6971C95D285B - b5469e7cd9fbbd42"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.String) -&gt; Swift.Optional&lt;Any&gt; in omniConverter.toUnitCases&lt;&#x3c4;_0_0 where &#x3c4;_0_0: __C.NSDimension&gt;(allStringCases: Swift.Array&lt;Swift.String&gt;) -&gt; Swift.Array&lt;&#x3c4;_0_0&gt;"
-                  moduleName = "omniConverter.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/johnflorian/Documents/Xcode/Projects/omniConverter/omniConverter/ConversionType.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "341"
-                  endingLineNumber = "341">
-               </Location>
-               <Location
-                  uuid = "FF1ACA58-CD87-47E3-B9AE-6971C95D285B - 986e325cea412273"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "omniConverter.toUnitCases&lt;&#x3c4;_0_0 where &#x3c4;_0_0: __C.NSDimension&gt;(allStringCases: Swift.Array&lt;Swift.String&gt;) -&gt; Swift.Array&lt;&#x3c4;_0_0&gt;"
-                  moduleName = "omniConverter.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/johnflorian/Documents/Xcode/Projects/omniConverter/omniConverter/ConversionType.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "341"
-                  endingLineNumber = "341">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "809A39EF-D404-482A-A120-C0A6CBCCCAF8"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -144,22 +82,6 @@
             endingLineNumber = "132"
             landmarkName = "calculateOutput()"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "37985CD3-E956-453D-9E09-6FB52616D2FF"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "omniConverter/ConversionType.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
-            landmarkName = "ConversionType"
-            landmarkType = "13">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

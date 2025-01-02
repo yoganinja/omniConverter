@@ -24,75 +24,18 @@ enum RadiationDose: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  /// Array of Unit representations of all enum cases
-  static var allUnitCases: [UnitRadiationDose] {
-    //        get {
-    //            return toUnitCases(allStringCases: allCases.toStrings)
-    //        }
-    get {
-      var collection: [UnitRadiationDose] = []
-      for item in allCases.toStrings {
-        if let value: UnitRadiationDose = UnitRadiationDose.getValue(forKey: item)  {
-          collection.append(value)
-        }
-      }
-      
-      return collection
-      //            return allCases.toStrings.map({
-      //                UnitRadiationDose.getValue(forKey: $0)
-      //            }) as! [UnitRadiationDose]
-      //            return toUnitCases(allStringCases: allCases.toStrings)
-    }
-  }
-  
-  //    func toUnitCases<T: Dimension>(allStringCases: [String]) -> [T] {
-  //        return allStringCases.map({
-  //            T.value(forKey: $0)
-  //        }) as! [T]
-  //
-  //        //    var collection: [T] = []
-  //        //    for item in allStringCases {
-  //        //        if let value = T.value(forKey: item) as? T {
-  //        //            collection.append(value)
-  //        //        }
-  //        //    }
-  //        //
-  //        //    return collection
-  //    }
-  
-  /// Unit representation of a case
-  var toUnit: UnitRadiationDose? {
-    get {
-      if let _ = RadiationDose.allCases.firstIndex(of: self) {
-        return self.rawValue.toUnit
-      }
-      
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitRadiationDose? {
+    if let unit = UnitRadiationDose.allUnits[name] {
+      return unit
+    } else {
       return nil
     }
   }
   
-  /// String representation of the enum case
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitRadiationDose? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -103,6 +46,58 @@ enum RadiationDose: String, CaseIterable, Identifiable {
     return Measurement(value: value, unit: from).converted(to: to).value
   }
 }
+
+extension UnitRadiationDose {
+  static let allUnits: [String: UnitRadiationDose] = {
+    RadiationDose.allCases.reduce(into: [String: UnitRadiationDose]()) { dict, type in
+      switch type {
+      case .bit:
+        dict[type.rawValue] = .bit
+      case .centigray:
+        dict[type.rawValue] = .centigray
+      case .gray:
+        dict[type.rawValue] = .gray
+      case .microgray:
+        dict[type.rawValue] = .microgray
+      case .microrem:
+        dict[type.rawValue] = .microrem
+      case .microsievert:
+        dict[type.rawValue] = .microsievert
+      case .milligray:
+        dict[type.rawValue] = .milligray
+      case .millirem:
+        dict[type.rawValue] = .millirem
+      case .millisievert:
+        dict[type.rawValue] = .millisievert
+      case .rad:
+        dict[type.rawValue] = .rad
+      case .rem:
+        dict[type.rawValue] = .rem
+      case .sievert:
+        dict[type.rawValue] = .sievert
+      }
+    }
+  }()
+  
+  static let allCases: [UnitRadiationDose] =
+  RadiationDose.allCases.compactMap { $0.id.toUnit }
+}
+
+extension String {
+  fileprivate var toUnit: UnitRadiationDose? {
+    if let v = UnitRadiationDose.value(forKey: self) {
+      if let value = v as? UnitRadiationDose {
+        return value
+      }
+    }
+    
+    return nil
+  }
+}
+
+
+
+
 
 final class UnitRadiationDose: Dimension, KeyValueCodable {
   override init(symbol: String, converter: UnitConverter) {
@@ -175,40 +170,4 @@ extension UnitRadiationDose {
   private static let _idKey = KeyValueCodableTypeInfo(key: "id", type: Int.self)
   private static let _fnameKey = KeyValueCodableTypeInfo(key: "fname", type: UnitRadiationDose.self)
   private static let _bitKey = KeyValueCodableTypeInfo(key: "bit", type: UnitRadiationDose.self)
-}
-
-extension UnitRadiationDose {
-  static let allUnits: [String: UnitRadiationDose] = [
-    "Bit": .bit,
-    "Centigray": .centigray,
-    "Gray": .gray,
-    "Microgray": .microgray,
-    "Microrem": .microrem,
-    "Microsievert": .microsievert,
-    "Milligray": .milligray,
-    "Millirem": .millirem,
-    "Millisievert": .millisievert,
-    "Rad": .rad,
-    "Rem": .rem,
-    "Sievert": .sievert
-  ]
-}
-
-extension String {
-  fileprivate var toUnit: UnitRadiationDose? {
-    //        let unitRadiationDose = UnitRadiationDose()
-    
-    let vv: UnitRadiationDose = UnitRadiationDose.getValue(forKey: self)
-    
-    return vv
-    
-    
-    if let v = UnitRadiationDose.value(forKey: self) {
-      if let value = v as? UnitRadiationDose {
-        return value
-      }
-    }
-    
-    return nil
-  }
 }

@@ -25,45 +25,19 @@ enum Area: String, CaseIterable, Identifiable {
   case squareYards = "Square Yards"
   
   var id: String { self.rawValue }
-
-  static var allUnitCases: [UnitArea] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
-    }
-  }
   
-  /// Unit representation of a case
-  var toUnit: UnitArea? {
-    get {
-      if let _ = Area.allCases.firstIndex(of: self) {
-        return self.rawValue.toUnit
-      }
-      
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitArea? {
+    if let unit = UnitArea.allUnits[name] {
+      return unit
+    } else {
       return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  //    static func name(from stringName: String) -> UnitArea? {
-  //        for item in allCases {
-  //            if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-  //                let itemIndex = allCases.index(of: item)
-  //                let lookupItem = allUnitCases[itemIndex!]
-  //                return lookupItem
-  //            }
-  //        }
-  //
-  //        return nil
-  //    }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = stringFrom.toUnit // self.name(from: stringFrom)
-    let to = stringTo.toUnit // self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -76,22 +50,43 @@ enum Area: String, CaseIterable, Identifiable {
 }
 
 extension UnitArea {
-  static let allUnits: [String: UnitArea] = [
-    "Acres": .acres,
-    "Ares": .ares,
-    "Hectares": .hectares,
-    "Square Centimeters": .squareCentimeters,
-    "Square Feet": .squareFeet,
-    "Square Inches": .squareInches,
-    "Square Kilometers": .squareKilometers,
-    "Square Megameters": .squareMegameters,
-    "Square Meters": .squareMeters,
-    "Square Micrometers": .squareMicrometers,
-    "Square Miles": .squareMiles,
-    "Square Millimeters": .squareMillimeters,
-    "Square Nanometers": .squareNanometers,
-    "Square Yards": .squareYards
-  ]
+  static let allUnits: [String: UnitArea] = {
+    Area.allCases.reduce(into: [String: UnitArea]()) { dict, type in
+      switch type {
+      case .acres:
+        dict[type.rawValue] = .acres
+      case .ares:
+        dict[type.rawValue] = .ares
+      case .hectares:
+        dict[type.rawValue] = .hectares
+      case .squareCentimeters:
+        dict[type.rawValue] = .squareCentimeters
+      case .squareFeet:
+        dict[type.rawValue] = .squareFeet
+      case .squareInches:
+        dict[type.rawValue] = .squareInches
+      case .squareKilometers:
+        dict[type.rawValue] = .squareKilometers
+      case .squareMegameters:
+        dict[type.rawValue] = .squareMegameters
+      case .squareMeters:
+        dict[type.rawValue] = .squareMeters
+      case .squareMicrometers:
+        dict[type.rawValue] = .squareMicrometers
+      case .squareMiles:
+        dict[type.rawValue] = .squareMiles
+      case .squareMillimeters:
+        dict[type.rawValue] = .squareMillimeters
+      case .squareNanometers:
+        dict[type.rawValue] = .squareNanometers
+      case .squareYards:
+        dict[type.rawValue] = .squareYards
+      }
+    }
+  }()
+  
+  static let allCases: [UnitArea] =
+  Area.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {
@@ -105,4 +100,3 @@ extension String {
     return nil
   }
 }
-

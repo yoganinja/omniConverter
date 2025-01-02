@@ -15,33 +15,18 @@ enum FuelEfficiency: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitFuelEfficiency] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitFuelEfficiency? {
+    if let unit = UnitFuelEfficiency.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitFuelEfficiency? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -54,11 +39,21 @@ enum FuelEfficiency: String, CaseIterable, Identifiable {
 }
 
 extension UnitFuelEfficiency {
-  static let allUnits: [String: UnitFuelEfficiency] = [
-    "Liters per 100 Kilometers": .litersPer100Kilometers,
-    "Miles per Gallon": .milesPerGallon,
-    "Miles per Imperial Gallon": .milesPerImperialGallon
-  ]
+  static let allUnits: [String: UnitFuelEfficiency] = {
+    FuelEfficiency.allCases.reduce(into: [String: UnitFuelEfficiency]()) { dict, type in
+      switch type {
+      case .litersPer100Kilometers:
+        dict[type.rawValue] = .litersPer100Kilometers
+      case .milesPerGallon:
+        dict[type.rawValue] = .milesPerGallon
+      case .milesPerImperialGallon:
+        dict[type.rawValue] = .milesPerImperialGallon
+      }
+    }
+  }()
+  
+  static let allCases: [UnitFuelEfficiency] =
+  FuelEfficiency.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

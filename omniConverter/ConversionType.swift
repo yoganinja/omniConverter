@@ -337,17 +337,18 @@ extension String {
 //    }
 }
 
-func toUnitCases<T: Dimension>(allStringCases: [String]) -> [T] {
-  return allStringCases.map({
-    T.value(forKey: $0)
-  }) as! [T]
-  
-//    var collection: [T] = []
-//    for item in allStringCases {
-//        if let value = T.value(forKey: item) as? T {
-//            collection.append(value)
-//        }
-//    }
+//func toUnitCases<T: Dimension>(allStringCases: [String]) -> [T] {
+//  return allStringCases.map({
+//    T.value(forKey: $0)
+//  }) as! [T]
 //
-//    return collection
-}
+////    var collection: [T] = []
+////    for item in allStringCases {
+////        if let value = T.value(forKey: item) as? T {
+////            collection.append(value)
+////        }
+////    }
+////
+////    return collection
+//}
+

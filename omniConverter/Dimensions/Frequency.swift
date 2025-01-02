@@ -20,33 +20,18 @@ enum Frequency: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitFrequency] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitFrequency? {
+    if let unit = UnitFrequency.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitFrequency? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -59,16 +44,31 @@ enum Frequency: String, CaseIterable, Identifiable {
 }
 
 extension UnitFrequency {
-  static let allUnits: [String: UnitFrequency] = [
-    "Gigahertz": .gigahertz,
-    "Hertz": .hertz,
-    "Kilohertz": .kilohertz,
-    "Megahertz": .megahertz,
-    "Microhertz": .microhertz,
-    "Millihertz": .millihertz,
-    "Nanohertz": .nanohertz,
-    "Terahertz": .terahertz
-  ]
+  static let allUnits: [String: UnitFrequency] = {
+    Frequency.allCases.reduce(into: [String: UnitFrequency]()) { dict, type in
+      switch type {
+      case .gigahertz:
+        dict[type.rawValue] = .gigahertz
+      case .hertz:
+        dict[type.rawValue] = .hertz
+      case .kilohertz:
+        dict[type.rawValue] = .kilohertz
+      case .megahertz:
+        dict[type.rawValue] = .megahertz
+      case .microhertz:
+        dict[type.rawValue] = .microhertz
+      case .millihertz:
+        dict[type.rawValue] = .millihertz
+      case .nanohertz:
+        dict[type.rawValue] = .nanohertz
+      case .terahertz:
+        dict[type.rawValue] = .terahertz
+      }
+    }
+  }()
+  
+  static let allCases: [UnitFrequency] =
+  Frequency.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

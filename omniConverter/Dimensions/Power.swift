@@ -23,33 +23,18 @@ enum Power: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitPower] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitPower? {
+    if let unit = UnitPower.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitPower? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -62,19 +47,37 @@ enum Power: String, CaseIterable, Identifiable {
 }
 
 extension UnitPower {
-  static let allUnits: [String: UnitPower] = [
-    "Femtowatts": .femtowatts,
-    "Gigawatts": .gigawatts,
-    "Horsepower": .horsepower,
-    "Kilowatts": .kilowatts,
-    "Megawatts": .megawatts,
-    "Microwatts": .microwatts,
-    "Milliwatts": .milliwatts,
-    "Nanowatts": .nanowatts,
-    "Picowatts": .picowatts,
-    "Terawatts": .terawatts,
-    "Watts": .watts
-  ]
+  static let allUnits: [String: UnitPower] = {
+    Power.allCases.reduce(into: [String: UnitPower]()) { dict, type in
+      switch type {
+      case .femtowatts:
+        dict[type.rawValue] = .femtowatts
+      case .gigawatts:
+        dict[type.rawValue] = .gigawatts
+      case .horsepower:
+        dict[type.rawValue] = .horsepower
+      case .kilowatts:
+        dict[type.rawValue] = .kilowatts
+      case .megawatts:
+        dict[type.rawValue] = .megawatts
+      case .microwatts:
+        dict[type.rawValue] = .microwatts
+      case .milliwatts:
+        dict[type.rawValue] = .milliwatts
+      case .nanowatts:
+        dict[type.rawValue] = .nanowatts
+      case .picowatts:
+        dict[type.rawValue] = .picowatts
+      case .terawatts:
+        dict[type.rawValue] = .terawatts
+      case .watts:
+        dict[type.rawValue] = .watts
+      }
+    }
+  }()
+  
+  static let allCases: [UnitPower] =
+  Power.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

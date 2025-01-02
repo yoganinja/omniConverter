@@ -17,33 +17,18 @@ enum ElectricPotentialDifference: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitElectricPotentialDifference] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitElectricPotentialDifference? {
+    if let unit = UnitElectricPotentialDifference.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitElectricPotentialDifference? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -55,20 +40,26 @@ enum ElectricPotentialDifference: String, CaseIterable, Identifiable {
   }
 }
 
-extension UnitElectricPotentialDifference: UnitProduct {
-  static func defaultUnitMapping() -> (UnitElectricResistance, UnitElectricCurrent, UnitElectricPotentialDifference) {
-    return (.ohms, .amperes, .volts)
-  }
-}
-
 extension UnitElectricPotentialDifference {
-  static let allUnits: [String: UnitElectricPotentialDifference] = [
-    "Kilovolts": .kilovolts,
-    "Megavolts": .megavolts,
-    "Microvolts": .microvolts,
-    "Millivolts": .millivolts,
-    "Volts": .volts
-  ]
+  static let allUnits: [String: UnitElectricPotentialDifference] = {
+    ElectricPotentialDifference.allCases.reduce(into: [String: UnitElectricPotentialDifference]()) { dict, type in
+      switch type {
+      case .kilovolts:
+        dict[type.rawValue] = .kilovolts
+      case .megavolts:
+        dict[type.rawValue] = .megavolts
+      case .microvolts:
+        dict[type.rawValue] = .microvolts
+      case .millivolts:
+        dict[type.rawValue] = .millivolts
+      case .volts:
+        dict[type.rawValue] = .volts
+      }
+    }
+  }()
+  
+  static let allCases: [UnitElectricPotentialDifference] =
+  ElectricPotentialDifference.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {
@@ -80,5 +71,12 @@ extension String {
     }
     
     return nil
+  }
+}
+
+
+extension UnitElectricPotentialDifference: UnitProduct {
+  static func defaultUnitMapping() -> (UnitElectricResistance, UnitElectricCurrent, UnitElectricPotentialDifference) {
+    return (.ohms, .amperes, .volts)
   }
 }

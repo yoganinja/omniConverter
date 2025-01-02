@@ -64,33 +64,18 @@ enum Radioactivity: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitRadioactivity] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitRadioactivity? {
+    if let unit = UnitRadioactivity.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitRadioactivity? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -99,6 +84,54 @@ enum Radioactivity: String, CaseIterable, Identifiable {
   
   static func convert(value: Double, from: UnitRadioactivity, to: UnitRadioactivity) -> Double {
     return Measurement(value: value, unit: from).converted(to: to).value
+  }
+}
+
+extension UnitRadioactivity {
+  static let allUnits: [String: UnitRadioactivity] = {
+    Radioactivity.allCases.reduce(into: [String: UnitRadioactivity]()) { dict, type in
+      switch type {
+      case .becquerel:
+        dict[type.rawValue] = .becquerel
+      case .curie:
+        dict[type.rawValue] = .curie
+      case .disintegrationsPerSecond:
+        dict[type.rawValue] = .disintegrationsPerSecond
+      case .gigabecquerel:
+        dict[type.rawValue] = .gigabecquerel
+      case .kilobecquerel:
+        dict[type.rawValue] = .kilobecquerel
+      case .microcurie:
+        dict[type.rawValue] = .microcurie
+      case .millicurie:
+        dict[type.rawValue] = .millicurie
+      case .megabecquerel:
+        dict[type.rawValue] = .megabecquerel
+      case .nanocurie:
+        dict[type.rawValue] = .nanocurie
+      case .picocurie:
+        dict[type.rawValue] = .picocurie
+      case .rutherford:
+        dict[type.rawValue] = .rutherford
+      case .terabecquerel:
+        dict[type.rawValue] = .terabecquerel
+      }
+    }
+  }()
+  
+  static let allCases: [UnitRadioactivity] =
+  Radioactivity.allCases.compactMap { $0.id.toUnit }
+}
+
+extension String {
+  fileprivate var toUnit: UnitRadioactivity? {
+    if let v = UnitRadioactivity.value(forKey: self) {
+      if let value = v as? UnitRadioactivity {
+        return value
+      }
+    }
+    
+    return nil
   }
 }
 
@@ -143,33 +176,4 @@ extension UnitRadioactivity {
   private static let _idKey = KeyValueCodableTypeInfo(key: "id", type: Int.self)
   private static let _fnameKey = KeyValueCodableTypeInfo(key: "fname", type: UnitRadioactivity.self)
   private static let _bitKey = KeyValueCodableTypeInfo(key: "bit", type: UnitRadioactivity.self)
-}
-
-extension UnitRadioactivity {
-  static let allUnits: [String: UnitRadioactivity] = [
-    "Becquerel": .becquerel,
-    "Curie": .curie,
-    "Disintegrations per Second": .disintegrationsPerSecond,
-    "Gigabecquerel": .gigabecquerel,
-    "Kilobecquerel": .kilobecquerel,
-    "Microcurie": .microcurie,
-    "Millicurie": .millicurie,
-    "Megabecquerel": .megabecquerel,
-    "Nanocurie": .nanocurie,
-    "Picocurie": .picocurie,
-    "Rutherford": .rutherford,
-    "Terabecquerel": .terabecquerel
-  ]
-}
-
-extension String {
-  fileprivate var toUnit: UnitRadioactivity? {
-    if let v = UnitRadioactivity.value(forKey: self) {
-      if let value = v as? UnitRadioactivity {
-        return value
-      }
-    }
-    
-    return nil
-  }
 }

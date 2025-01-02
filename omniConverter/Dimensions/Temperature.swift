@@ -15,33 +15,18 @@ enum Temperature: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitTemperature] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitTemperature? {
+    if let unit = UnitTemperature.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitTemperature? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -54,11 +39,21 @@ enum Temperature: String, CaseIterable, Identifiable {
 }
 
 extension UnitTemperature {
-  static let allUnits: [String: UnitTemperature] = [
-    "Celsius": .celsius,
-    "Fahrenheit": .fahrenheit,
-    "Kelvin": .kelvin
-  ]
+  static let allUnits: [String: UnitTemperature] = {
+    Temperature.allCases.reduce(into: [String: UnitTemperature]()) { dict, type in
+      switch type {
+      case .celsius:
+        dict[type.rawValue] = .celsius
+      case .fahrenheit:
+        dict[type.rawValue] = .fahrenheit
+      case .kelvin:
+        dict[type.rawValue] = .kelvin
+      }
+    }
+  }()
+  
+  static let allCases: [UnitTemperature] =
+  Temperature.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

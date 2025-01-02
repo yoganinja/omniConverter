@@ -27,36 +27,19 @@ enum Acceleration: String, CaseIterable, Identifiable {
 //  case yardsPerSecondSquared = "Yards per Second Squared"
   
   var id: String { self.rawValue }
-
-  /// Array of Unit representations of all enum cases
-  static var allUnitCases: [UnitAcceleration] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
-    }
-  }
   
-  /// Unit representation of a case
-  var toUnit: UnitAcceleration? {
-    get {
-      if let _ = Acceleration.allCases.firstIndex(of: self) {
-        return self.rawValue.toUnit
-      }
-      
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitAcceleration? {
+    if let unit = UnitAcceleration.allUnits[name] {
+      return unit
+    } else {
       return nil
     }
   }
   
-  /// String representation of the enum case
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = stringFrom.toUnit
-    let to = stringTo.toUnit
-    //        let to = self.unit(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -69,24 +52,19 @@ enum Acceleration: String, CaseIterable, Identifiable {
 }
 
 extension UnitAcceleration {
-  static let allUnits: [String: UnitAcceleration] = [
-    "Earth Gravity": .gravity,
-    "Meters per Second Squared": .metersPerSecondSquared,
-//    "Centigal": .centigal,
-//    "Decigal": .decigal,
-//    "Decimeters per Second Squared": .decimetersPerSecondSquared,
-//    "Feet per Second Squared": .feetPerSecondSquared,
-//    "Galileo": .galileo,
-//    "Inches per Second Squared": .inchesPerSecondSquared,
-//    "Kilometers per Second Squared": .kilometersPerSecondSquared,
-//    "Knots per Second Squared": .knotsPerSecondSquared,
-//    "Microgal": .microgal,
-//    "Miles per Hour Minute": .milesPerHourMinute,
-//    "Miles per Hour Second": .milesPerHourSecond,
-//    "Miles per Second Squared": .milesPerSecondSquared,
-//    "Milligal": .milligal,
-//    "Yards per Second Squared": .yardsPerSecondSquared
-  ]
+  static let allUnits: [String: UnitAcceleration] = {
+    Acceleration.allCases.reduce(into: [String: UnitAcceleration]()) { dict, type in
+      switch type {
+      case .gravity:
+        dict[type.rawValue] = .gravity
+      case .metersPerSecondSquared:
+        dict[type.rawValue] = .metersPerSecondSquared
+      }
+    }
+  }()
+  
+  static let allCases: [UnitAcceleration] =
+  Acceleration.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

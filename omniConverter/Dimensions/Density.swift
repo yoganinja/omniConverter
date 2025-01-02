@@ -13,48 +13,19 @@ enum Density: String, CaseIterable, Identifiable {
   case ouncesPerFluidOunce = "Ounces per Fluid Ounce"
   
   var id: String { self.rawValue }
-
-  static var allUnitCases: [UnitDensity] {
-    get {
-      return Density.toUnitCases(allStringCases: allCases.toStrings)
-    }
-  }
   
-  private static func toUnitCases(allStringCases: [String]) -> [UnitDensity] {
-    return allCases.map({
-      $0.toUnit!
-    })
-    
-    //            var collection: [UnitDensity] = []
-    //            for item in allStringCases {
-    //                if let value = UnitDensity.value(forKey: item) as? UnitDensity {
-    //                    collection.append(value)
-    //                }
-    //            }
-    //
-    //            return collection
-  }
-  
-  /// Unit representation of a case
-  var toUnit: UnitDensity? {
-    get {
-      if let _ = Density.allCases.firstIndex(of: self) {
-        return self.rawValue.toUnit
-      }
-      
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitDensity? {
+    if let unit = UnitDensity.allUnits[name] {
+      return unit
+    } else {
       return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = stringFrom.toUnit
-    let to = stringTo.toUnit
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -63,6 +34,34 @@ enum Density: String, CaseIterable, Identifiable {
   
   static func convert(value: Double, from: UnitDensity, to: UnitDensity) -> Double {
     return Measurement(value: value, unit: from).converted(to: to).value
+  }
+}
+
+extension UnitDensity {
+  static let allUnits: [String: UnitDensity] = {
+    Density.allCases.reduce(into: [String: UnitDensity]()) { dict, type in
+      switch type {
+      case .gramsPerMilliliter:
+        dict[type.rawValue] = .gramsPerMilliliter
+      case .ouncesPerFluidOunce:
+        dict[type.rawValue] = .ouncesPerFluidOunce
+      }
+    }
+  }()
+  
+  static let allCases: [UnitDensity] =
+  Density.allCases.compactMap { $0.id.toUnit }
+}
+
+extension String {
+  fileprivate var toUnit: UnitDensity? {
+    if let v = UnitDensity.value(forKey: self) {
+      if let value = v as? UnitDensity {
+        return value
+      }
+    }
+    
+    return nil
   }
 }
 
@@ -97,42 +96,4 @@ extension UnitDensity {
   private static let _idKey = KeyValueCodableTypeInfo(key: "id", type: Int.self)
   private static let _fnameKey = KeyValueCodableTypeInfo(key: "fname", type: UnitDensity.self)
   private static let _bitKey = KeyValueCodableTypeInfo(key: "bit", type: UnitDensity.self)
-}
-
-extension UnitDensity {
-  static let allUnits: [String: UnitDensity] = [
-    "Grams per Milliliter": .gramsPerMilliliter,
-    "Ounces per Fluid Ounce": .ouncesPerFluidOunce
-  ]
-}
-
-extension String {
-  fileprivate var toUnit: UnitDensity? {
-    if let v = UnitDensity.value(forKey: self) {
-      if let value = v as? UnitDensity {
-        return value
-      }
-    }
-    
-    return nil
-  }
-  
-  //    func toDensityUnit() -> UnitDensity? {
-  //        for item in Density.allCases {
-  //            if item.toString == self {
-  //                let itemIndex = Density.allCases.index(of: item)
-  //                let v = Density.allCases.toStrings.map({
-  //                    UnitDensity.value(forKey: $0)
-  //                })
-  ////                let aaa = toUnitCases(allStringCases: Density.allCases.toStrings)
-  //                let bbb = v[itemIndex!]
-  //                let ccc = bbb as! UnitDensity(
-  ////                let lookupItem = toUnitCases(allStringCases: Density.allCases.toStrings)[itemIndex!] as! UnitDensity
-  //                return ccc
-  //            }
-  //        }
-  //
-  //        return nil
-  //    }
-  
 }

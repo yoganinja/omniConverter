@@ -22,33 +22,18 @@ enum Pressure: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitPressure] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitPressure? {
+    if let unit = UnitPressure.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitPressure? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -61,18 +46,35 @@ enum Pressure: String, CaseIterable, Identifiable {
 }
 
 extension UnitPressure {
-  static let allUnits: [String: UnitPressure] = [
-    "Bars": .bars,
-    "Gigapascals": .gigapascals,
-    "Hectopascals": .hectopascals,
-    "Inches of Mercury": .inchesOfMercury,
-    "Kilopascals": .kilopascals,
-    "Megapascals": .megapascals,
-    "Millibars": .millibars,
-    "Millimeters of Mercury": .millimetersOfMercury,
-    "Newtons per Meters Squared": .newtonsPerMetersSquared,
-    "Pounds Force per Square Inch": .poundsForcePerSquareInch
-  ]
+  static let allUnits: [String: UnitPressure] = {
+    Pressure.allCases.reduce(into: [String: UnitPressure]()) { dict, type in
+      switch type {
+      case .bars:
+        dict[type.rawValue] = .bars
+      case .gigapascals:
+        dict[type.rawValue] = .gigapascals
+      case .hectopascals:
+        dict[type.rawValue] = .hectopascals
+      case .inchesOfMercury:
+        dict[type.rawValue] = .inchesOfMercury
+      case .kilopascals:
+        dict[type.rawValue] = .kilopascals
+      case .megapascals:
+        dict[type.rawValue] = .megapascals
+      case .millibars:
+        dict[type.rawValue] = .millibars
+      case .millimetersOfMercury:
+        dict[type.rawValue] = .millimetersOfMercury
+      case .newtonsPerMetersSquared:
+        dict[type.rawValue] = .newtonsPerMetersSquared
+      case .poundsForcePerSquareInch:
+        dict[type.rawValue] = .poundsForcePerSquareInch
+      }
+    }
+  }()
+  
+  static let allCases: [UnitPressure] =
+  Pressure.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {
@@ -86,6 +88,8 @@ extension String {
     return nil
   }
 }
+
+
 
 extension String {
   /// Usage:

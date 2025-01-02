@@ -20,33 +20,18 @@ enum Illuminance: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitIlluminance] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitIlluminance? {
+    if let unit = UnitIlluminance.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitIlluminance? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -58,17 +43,18 @@ enum Illuminance: String, CaseIterable, Identifiable {
   }
 }
 
-//case nox = "Nox"
-//case phot = "Phot"
-//case kilolux = "Kilolux"
-//case lumenPerCentimeter = "Lumen per Centimeter"
-//case lumenPerMeter = "Lumen per Meter"
-//case lumenPerFoot = "Lumen per Foot"
-//case lumenPerInch = "Lumen per Inch"
 extension UnitIlluminance {
-  static let allUnits: [String: UnitIlluminance] = [
-    "Lux": .lux
-  ]
+  static let allUnits: [String: UnitIlluminance] = {
+    Illuminance.allCases.reduce(into: [String: UnitIlluminance]()) { dict, type in
+      switch type {
+      case .lux:
+        dict[type.rawValue] = .lux
+      }
+    }
+  }()
+  
+  static let allCases: [UnitIlluminance] =
+  Illuminance.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

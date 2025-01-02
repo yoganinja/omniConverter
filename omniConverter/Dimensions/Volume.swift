@@ -43,33 +43,18 @@ enum Volume: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitVolume] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitVolume? {
+    if let unit = UnitVolume.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitVolume? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -82,39 +67,77 @@ enum Volume: String, CaseIterable, Identifiable {
 }
 
 extension UnitVolume {
-  static let allUnits: [String: UnitVolume] = [
-    "Acre Feet": .acreFeet,
-    "Bushels": .bushels,
-    "Centiliters": .centiliters,
-    "Cubic Centimeters": .cubicCentimeters,
-    "Cubic Decimeters": .cubicDecimeters,
-    "Cubic Feet": .cubicFeet,
-    "Cubic Inches": .cubicInches,
-    "Cubic Kilometers": .cubicKilometers,
-    "Cubic Meters": .cubicMeters,
-    "Cubic Miles": .cubicMiles,
-    "Cubic Millimeters": .cubicMillimeters,
-    "Cubic Yards": .cubicYards,
-    "Cups": .cups,
-    "Deciliters": .deciliters,
-    "Fluid Ounces": .fluidOunces,
-    "Gallons": .gallons,
-    "Imperial Fluid Ounces": .imperialFluidOunces,
-    "Imperial Gallons": .imperialGallons,
-    "Imperial Pints": .imperialPints,
-    "Imperial Quarts": .imperialQuarts,
-    "Imperial Tablespoons": .imperialTablespoons,
-    "Imperial Teaspoons": .imperialTeaspoons,
-    "Kiloliters": .kiloliters,
-    "Liters": .liters,
-    "Megaliters": .megaliters,
-    "Metric Cups": .metricCups,
-    "Milliliters": .milliliters,
-    "Pints": .pints,
-    "Quarts": .quarts,
-    "Tablespoons": .tablespoons,
-    "Teaspoons": .teaspoons
-  ]
+  static let allUnits: [String: UnitVolume] = {
+    Volume.allCases.reduce(into: [String: UnitVolume]()) { dict, type in
+      switch type {
+      case .acreFeet:
+        dict[type.rawValue] = .acreFeet
+      case .bushels:
+        dict[type.rawValue] = .bushels
+      case .centiliters:
+        dict[type.rawValue] = .centiliters
+      case .cubicCentimeters:
+        dict[type.rawValue] = .cubicCentimeters
+      case .cubicDecimeters:
+        dict[type.rawValue] = .cubicDecimeters
+      case .cubicFeet:
+        dict[type.rawValue] = .cubicFeet
+      case .cubicInches:
+        dict[type.rawValue] = .cubicInches
+      case .cubicKilometers:
+        dict[type.rawValue] = .cubicKilometers
+      case .cubicMeters:
+        dict[type.rawValue] = .cubicMeters
+      case .cubicMiles:
+        dict[type.rawValue] = .cubicMiles
+      case .cubicMillimeters:
+        dict[type.rawValue] = .cubicMillimeters
+      case .cubicYards:
+        dict[type.rawValue] = .cubicYards
+      case .cups:
+        dict[type.rawValue] = .cups
+      case .deciliters:
+        dict[type.rawValue] = .deciliters
+      case .fluidOunces:
+        dict[type.rawValue] = .fluidOunces
+      case .gallons:
+        dict[type.rawValue] = .gallons
+      case .imperialFluidOunces:
+        dict[type.rawValue] = .imperialFluidOunces
+      case .imperialGallons:
+        dict[type.rawValue] = .imperialGallons
+      case .imperialPints:
+        dict[type.rawValue] = .imperialPints
+      case .imperialQuarts:
+        dict[type.rawValue] = .imperialQuarts
+      case .imperialTablespoons:
+        dict[type.rawValue] = .imperialTablespoons
+      case .imperialTeaspoons:
+        dict[type.rawValue] = .imperialTeaspoons
+      case .kiloliters:
+        dict[type.rawValue] = .kiloliters
+      case .liters:
+        dict[type.rawValue] = .liters
+      case .megaliters:
+        dict[type.rawValue] = .megaliters
+      case .metricCups:
+        dict[type.rawValue] = .metricCups
+      case .milliliters:
+        dict[type.rawValue] = .milliliters
+      case .pints:
+        dict[type.rawValue] = .pints
+      case .quarts:
+        dict[type.rawValue] = .quarts
+      case .tablespoons:
+        dict[type.rawValue] = .tablespoons
+      case .teaspoons:
+        dict[type.rawValue] = .teaspoons
+      }
+    }
+  }()
+  
+  static let allCases: [UnitVolume] =
+  Volume.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {

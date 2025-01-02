@@ -17,33 +17,18 @@ enum Energy: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-  static var allUnitCases: [UnitEnergy] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
+  /// Type-safe way of getting the unit from a string name
+  static func unit(from name: String) -> UnitEnergy? {
+    if let unit = UnitEnergy.allUnits[name] {
+      return unit
+    } else {
+      return nil
     }
   }
   
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
-  
-  static func name(from stringName: String) -> UnitEnergy? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
-    }
-    
-    return nil
-  }
-  
-  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-    let from = self.name(from: stringFrom)
-    let to = self.name(from: stringTo)
+  static func convert(value: Double, from input: String, to output: String) -> Double {
+    let from = self.unit(from: input)
+    let to = self.unit(from: output)
     
     let result = self.convert(value: value, from: from!, to: to!)
     
@@ -56,13 +41,25 @@ enum Energy: String, CaseIterable, Identifiable {
 }
 
 extension UnitEnergy {
-  static let allUnits: [String: UnitEnergy] = [
-    "Calories": .calories,
-    "Joules": .joules,
-    "Kilocalories": .kilocalories,
-    "Kilojoules": .kilojoules,
-    "Kilowatt Hours": .kilowattHours
-  ]
+  static let allUnits: [String: UnitEnergy] = {
+    Energy.allCases.reduce(into: [String: UnitEnergy]()) { dict, type in
+      switch type {
+      case .calories:
+        dict[type.rawValue] = .calories
+      case .joules:
+        dict[type.rawValue] = .joules
+      case .kilocalories:
+        dict[type.rawValue] = .kilocalories
+      case .kilojoules:
+        dict[type.rawValue] = .kilojoules
+      case .kilowattHours:
+        dict[type.rawValue] = .kilowattHours
+      }
+    }
+  }()
+  
+  static let allCases: [UnitEnergy] =
+  Energy.allCases.compactMap { $0.id.toUnit }
 }
 
 extension String {
