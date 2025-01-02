@@ -107,6 +107,8 @@ extension MainViewModel {
       result = FuelEfficiency.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .illuminance:
       result = Illuminance.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .informationStorage:
+      result = InformationStorage.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .mass:
       result = Mass.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .power:

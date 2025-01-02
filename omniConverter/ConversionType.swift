@@ -23,6 +23,7 @@ enum ConversionType: String, CaseIterable, Identifiable {
   case frequency = "Frequency"
   case fuelEfficiency = "Fuel Efficiency"
   case illuminance = "Illuminance"
+  case informationStorage = "InformationStorage"
   case length = "Length"
   case mass = "Mass"
   case power = "Power"
@@ -66,6 +67,8 @@ enum ConversionType: String, CaseIterable, Identifiable {
       return UnitFuelEfficiency.self
     case .illuminance:
       return UnitIlluminance.self
+    case .informationStorage:
+      return UnitInformationStorage.self
     case .length:
       return UnitLength.self
     case .mass:
@@ -123,6 +126,8 @@ enum ConversionType: String, CaseIterable, Identifiable {
       return "drop.fill"
     case .illuminance:
       return "lightbulb"
+    case .informationStorage:
+      return "swiftdata"
     case .power:
       return "powerplug.fill"
     case .pressure:
@@ -170,6 +175,8 @@ extension ConversionType {
       return FuelEfficiency.allCases.names
     case .illuminance:
       return Illuminance.allCases.names
+    case .informationStorage:
+      return InformationStorage.allCases.names
     case .length:
       return Length.allCases.names
     case .mass:
@@ -223,6 +230,8 @@ extension String {
       return UnitFuelEfficiency.allUnits[self]
     case is UnitIlluminance.Type:
       return UnitIlluminance.allUnits[self]
+    case is UnitInformationStorage.Type:
+      return UnitInformationStorage.allUnits[self]
     case is UnitLength.Type:
       return UnitLength.allUnits[self]
     case is UnitMass.Type:
