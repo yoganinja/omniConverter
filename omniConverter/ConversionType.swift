@@ -87,18 +87,6 @@ enum ConversionType: String, CaseIterable, Identifiable {
     }
   }
   
-//  func resolveUnit(from unitName: String) -> Dimension? {
-//    switch self {
-//    case .length:
-//        return UnitLength(symbol: unitName)
-//    case .duration:
-//        return UnitDuration(symbol: unitName)
-//    // Add other cases...
-//    default:
-//        return nil
-//    }
-//  }
-
   var imageName: String {
     switch self {
     case .length:
@@ -150,71 +138,6 @@ enum ConversionType: String, CaseIterable, Identifiable {
     }
   }
 }
-
-//extension ConversionType {
-//    var unitTypeNames: [String] {
-//        return unitTypes.map { "\($0)" }
-//    }
-//}
-//
-//extension ConversionType {
-//  var unitTypes: [Dimension] {
-//    switch self {
-//    case .acceleration:
-//      return Acceleration.allUnitCases
-//    case .angle:
-//      return Angle.allUnitCases
-//    case .area:
-//      return Area.allUnitCases
-//    case .density:
-//      return Density.allUnitCases
-//    case .dispersion:
-//      return Dispersion.allUnitCases
-//    case .duration:
-//      return Duration.allUnitCases
-//    case .electricCharge:
-//      return ElectricCharge.allUnitCases
-//    case .electricCurrent:
-//      return ElectricCurrent.allUnitCases
-//    case .electricPotentialDifference:
-//      return ElectricPotentialDifference.allUnitCases
-//    case .electricResistance:
-//      return ElectricResistance.allUnitCases
-//    case .energy:
-//      return Energy.allUnitCases
-//    case .frequency:
-//      return Frequency.allUnitCases
-//    case .fuelEfficiency:
-//      return FuelEfficiency.allUnitCases
-//    case .illuminance:
-//      return Illuminance.allUnitCases
-//    case .length:
-//      return Length.allUnitCases
-//    case .mass:
-//      return Mass.allUnitCases
-//    case .power:
-//      return Power.allUnitCases
-//    case .pressure:
-//      return Pressure.allUnitCases
-//    case .radiationDose:
-//      return RadiationDose.allUnitCases
-//    case .radioactivity:
-//      return Radioactivity.allUnitCases
-//    case .speed:
-//      return Speed.allUnitCases
-//    case .temperature:
-//      return Temperature.allUnitCases
-//    case .volume:
-//      return Volume.allUnitCases
-//    }
-//  }
-//}
-
-//extension ConversionType {
-//  var unitTypeNames: [String] {
-//    return unitTypes.map { "\($0)" }
-//  }
-//}
 
 extension ConversionType {
   var unitTypeNames: [String] {
@@ -322,33 +245,4 @@ extension String {
       return nil
     }
   }
-  
-//    func unit<T: Dimension>(of type: T.Type) -> T? {
-//        switch type {
-//        case is UnitLength.Type:
-//            return UnitLength.allUnits[self] as? T
-////        case is UnitSpeed.Type:
-////            return UnitSpeed.allUnits[self] as? T
-////        case is UnitPressure.Type:
-////            return UnitPressure.allUnits[self] as? T
-//        default:
-//            return nil
-//        }
-//    }
 }
-
-//func toUnitCases<T: Dimension>(allStringCases: [String]) -> [T] {
-//  return allStringCases.map({
-//    T.value(forKey: $0)
-//  }) as! [T]
-//
-////    var collection: [T] = []
-////    for item in allStringCases {
-////        if let value = T.value(forKey: item) as? T {
-////            collection.append(value)
-////        }
-////    }
-////
-////    return collection
-//}
-
