@@ -39,58 +39,7 @@ enum ElectricCharge: String, CaseIterable, Identifiable {
   static func convert(value: Double, from: UnitElectricCharge, to: UnitElectricCharge) -> Double {
     return Measurement(value: value, unit: from).converted(to: to).value
   }
-  
-  
-  
-  
-//  static var allUnitCases: [UnitElectricCharge] {
-//    get {
-//      return toUnitCases(allStringCases: allCases.toStrings)
-//    }
-//  }
-//  
-//  var toString: String {
-//    get {
-//      return String(describing: self)
-//    }
-//  }
-//  
-//  static func name(from stringName: String) -> UnitElectricCharge? {
-//    for item in allCases {
-//      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-//        let itemIndex = allCases.firstIndex(of: item)
-//        let lookupItem = allUnitCases[itemIndex!]
-//        return lookupItem
-//      }
-//    }
-//    
-//    return nil
-//  }
-//  
-//  static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
-//    let from = self.name(from: stringFrom)
-//    let to = self.name(from: stringTo)
-//    
-//    let result = self.convert(value: value, from: from!, to: to!)
-//    
-//    return result
-//  }
-//  
-//  static func convert(value: Double, from: UnitElectricCharge, to: UnitElectricCharge) -> Double {
-//    return Measurement(value: value, unit: from).converted(to: to).value
-//  }
 }
-
-//extension UnitElectricCharge {
-//  static let allUnits: [String: UnitElectricCharge] = [
-//    "Ampere Hours": .ampereHours,
-//    "Coulombs": .coulombs,
-//    "Kiloampere Hours": .kiloampereHours,
-//    "Megaampere Hours": .megaampereHours,
-//    "Microampere Hours": .microampereHours,
-//    "Milliampere Hours": .milliampereHours
-//  ]
-//}
 
 extension UnitElectricCharge {
   static let allUnits: [String: UnitElectricCharge] = {
