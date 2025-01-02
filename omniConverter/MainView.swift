@@ -10,7 +10,7 @@ import SwiftUI
 struct PlayView: View {
   let types = ConversionType.allCases
   let unitNames = ConversionType.length.unitTypeNames
-  let units = Length.allUnitCases
+//  let units = Length.allUnitCases
   @State private var selectedConversionTypeUnits: [Unit]// = ConversionType.length.allUnitCases
   
   var body: some View {

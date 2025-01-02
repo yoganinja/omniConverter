@@ -28,15 +28,22 @@ enum Duration: String, CaseIterable, Identifiable {
   }
   
   static func name(from stringName: String) -> UnitDuration? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
+    if let aaa = UnitDuration.allUnits[stringName] {
+      return aaa
+    } else {
+      return nil
     }
     
-    return nil
+    
+//    for item in allCases {
+//      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
+//        let itemIndex = allCases.firstIndex(of: item)
+//        let lookupItem = allUnitCases[itemIndex!]
+//        return lookupItem
+//      }
+//    }
+//    
+//    return nil
   }
   
   static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {

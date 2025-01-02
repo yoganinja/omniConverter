@@ -87,6 +87,18 @@ enum ConversionType: String, CaseIterable, Identifiable {
     }
   }
   
+//  func resolveUnit(from unitName: String) -> Dimension? {
+//    switch self {
+//    case .length:
+//        return UnitLength(symbol: unitName)
+//    case .duration:
+//        return UnitDuration(symbol: unitName)
+//    // Add other cases...
+//    default:
+//        return nil
+//    }
+//  }
+
   var imageName: String {
     switch self {
     case .length:

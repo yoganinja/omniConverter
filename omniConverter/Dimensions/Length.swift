@@ -8,7 +8,15 @@
 
 import Foundation
 
-enum Length: String, CaseIterable, Identifiable {
+//struct LengthUnit: ConvertibleUnit {
+//    static func convert(value: Double, from inputUnit: UnitLength, to outputUnit: UnitLength) -> Double {
+//        let inputMeasurement = Measurement(value: value, unit: inputUnit)
+//        let outputMeasurement = inputMeasurement.converted(to: outputUnit)
+//        return outputMeasurement.value
+//    }
+//}
+
+enum Length: String, CaseIterable, Identifiable { //, ConvertibleUnit {
   case angstroms = "Angstroms"
   case astronomicalUnits = "Astronomical Units"
   case centimeters = "Centimeters"
@@ -37,58 +45,35 @@ enum Length: String, CaseIterable, Identifiable {
   
   var id: String { self.rawValue }
   
-//  var symbol: String {
-//    return switch self {
-//    case .angstroms: "Å"
-//    case .astronomicalUnits: "au"
-//    case .centimeters: "cm"
-//    case .decameters: "dam"
-//    case .decimeters: "dm"
-//    case .fathoms: "ftm"
-//    case .feet: "ft"
-//    case .furlongs: "fur"
-//    case .hectometers: "hm"
-//    case .inches: "in"
-//    case .kilometers: "km"
-//    case .leagues: "leag"
-//    case .lightyears: "ly"
-//    case .megameters: "Mm"
-//    case .meters: "m"
-//    case .micrometers: "µm"
-//    case .miles: "mi"
-//    case .millimeters: "mm"
-//    case .nanometers: "nm"
-//    case .nauticalLeagues: "3NM"
-//    case .nauticalMiles: "NM"
-//    case .parsecs: "pc"
-//    case .picometers: "pm"
-//    case .scandinavianMiles: "mil"
-//    case .yards: "yd"
+//  static var allUnitCases: [UnitLength] {
+//    get {
+//      return toUnitCases(allStringCases: allCases.toStrings)
 //    }
 //  }
   
-  static var allUnitCases: [UnitLength] {
-    get {
-      return toUnitCases(allStringCases: allCases.toStrings)
-    }
-  }
-  
-  var toString: String {
-    get {
-      return String(describing: self)
-    }
-  }
+//  var toString: String {
+//    get {
+//      return String(describing: self)
+//    }
+//  }
   
   static func name(from stringName: String) -> UnitLength? {
-    for item in allCases {
-      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
-        let itemIndex = allCases.firstIndex(of: item)
-        let lookupItem = allUnitCases[itemIndex!]
-        return lookupItem
-      }
+    if let aaa = UnitLength.allUnits[stringName] {
+      return aaa
+    } else {
+      return nil
     }
     
-    return nil
+    
+//    for item in allCases {
+//      if String(describing: item).stripSpaces.lowercased() == stringName.stripSpaces.lowercased() {
+//        let itemIndex = allCases.firstIndex(of: item)
+//        let lookupItem = allUnitCases[itemIndex!]
+//        return lookupItem
+//      }
+//    }
+//    
+//    return nil
   }
   
   static func convert(value: Double, from stringFrom: String, to stringTo: String) -> Double {
@@ -100,9 +85,46 @@ enum Length: String, CaseIterable, Identifiable {
     return result
   }
   
-  static func convert(value: Double, from: UnitLength, to: UnitLength) -> Double {
-    return Measurement(value: value, unit: from).converted(to: to).value
+  static func convert(value: Double, from inputUnit: UnitLength, to outputUnit: UnitLength) -> Double {
+      let inputMeasurement = Measurement(value: value, unit: inputUnit)
+      let outputMeasurement = inputMeasurement.converted(to: outputUnit)
+    let output = outputMeasurement.value
+    return output
   }
+  
+//  static func convert(value: Double, from: UnitLength, to: UnitLength) -> Double {
+//    return Measurement(value: value, unit: from).converted(to: to).value
+//  }
+}
+
+extension UnitLength {
+  static let allUnits: [String: UnitLength] = [
+    "Angstroms": .angstroms,
+    "Astronomical Units": .astronomicalUnits,
+    "Centimeters": .centimeters,
+    "Decameters": .decameters,
+    "Decimeters": .decimeters,
+    "Fathoms": .fathoms,
+    "Feet": .feet,
+    "Furlongs": .furlongs,
+    "Hectometers": .hectometers,
+    "Inches": .inches,
+    "Kilometers": .kilometers,
+    "Leagues": .leagues,
+    "Lightyears": .lightyears,
+    "Megameters": .megameters,
+    "Meters": .meters,
+    "Micrometers": .micrometers,
+    "Miles": .miles,
+    "Millimeters": .millimeters,
+    "Nanometers": .nanometers,
+    "Nautical Leagues": .nauticalLeagues,
+    "Nautical Miles": .nauticalMiles,
+    "Parsecs": .parsecs,
+    "Picometers": .picometers,
+    "Scandinavian Miles": .scandinavianMiles,
+    "Yards": .yards
+  ]
 }
 
 //extension UnitLength {
@@ -148,36 +170,6 @@ extension UnitLength: UnitProduct {
   }
 }
 
-extension UnitLength {
-  static let allUnits: [String: UnitLength] = [
-    "Angstroms": .angstroms,
-    "Astronomical Units": .astronomicalUnits,
-    "Centimeters": .centimeters,
-    "Decameters": .decameters,
-    "Decimeters": .decimeters,
-    "Fathoms": .fathoms,
-    "Feet": .feet,
-    "Furlongs": .furlongs,
-    "Hectometers": .hectometers,
-    "Inches": .inches,
-    "Kilometers": .kilometers,
-    "Leagues": .leagues,
-    "Lightyears": .lightyears,
-    "Megameters": .megameters,
-    "Meters": .meters,
-    "Micrometers": .micrometers,
-    "Miles": .miles,
-    "Millimeters": .millimeters,
-    "Nanometers": .nanometers,
-    "Nautical Leagues": .nauticalLeagues,
-    "Nautical Miles": .nauticalMiles,
-    "Parsecs": .parsecs,
-    "Picometers": .picometers,
-    "Scandinavian Miles": .scandinavianMiles,
-    "Yards": .yards
-  ]
-}
-
 extension String {
 //  var unit: UnitLength? {
 //    return self.toUnit(of: UnitLength.self)
@@ -189,7 +181,8 @@ extension String {
 //        return value
 //      }
 //    }
-//    
+//
 //    return nil
 //  }
 }
+

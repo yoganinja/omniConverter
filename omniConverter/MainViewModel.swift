@@ -7,6 +7,11 @@
 
 import Foundation
 
+//protocol ConvertibleUnit {
+//  associatedtype UnitType: Dimension
+//  static func convert(value: Double, from inputUnit: UnitType, to outputUnit: UnitType) -> Double
+//}
+
 class MainViewModel: ObservableObject {
   @Published var inputValue: String = "0"
   @Published var outputValue: String = "0"
@@ -61,23 +66,139 @@ extension MainViewModel {
     calculateOutput()
   }
   
+  private func resolveUnit(from unitName: String, for type: ConversionType) -> Dimension? {
+      switch type {
+      case .length:
+        
+        
+        if let aaa = UnitLength.allUnits[unitName] {
+          return aaa
+        } else {
+          return nil
+        }
+        
+        
+        
+        
+        
+//          switch unitName {
+//          case "Inches": return UnitLength.inches
+//          case "Millimeters": return UnitLength.millimeters
+//          case "Centimeters": return UnitLength.centimeters
+//          case "Meters": return UnitLength.meters
+//          case "Nanometers": return UnitLength.nanometers
+//          default: return nil
+//          }
+      case .duration:
+          switch unitName {
+          case "Hours": return UnitDuration.hours
+          case "Minutes": return UnitDuration.minutes
+          case "Seconds": return UnitDuration.seconds
+          default: return nil
+          }
+      default:
+          return nil
+      }
+  }
+
+//  private func resolveUnit(from unitName: String, for type: ConversionType) -> Dimension? {
+//    let inputMeasurement = Measurement(value: 1, unit: UnitLength.inches)
+//    let outputMeasurement = inputMeasurement.converted(to: UnitLength.millimeters)
+//    print(outputMeasurement.value) // Should print 25.4
+//
+//      switch type {
+//      case .length:
+//          return UnitLength(symbol: unitName)
+//      case .duration:
+//          return UnitDuration(symbol: unitName)
+//      default:
+//          return nil
+//      }
+//  }
+
   // Convert the input value based on selected units
   private func calculateOutput() {
     guard let input = Double(inputValue) else {
-      outputValue = "0"
+      outputValue = String(format: "%.2f", 0)
       return
     }
     
-    let conversionFactor: Double
-    if selectedInputUnit == "Inches" && selectedOutputUnit == "Millimeters" {
-      conversionFactor = 25.4
-    } else if selectedInputUnit == "Millimeters" && selectedOutputUnit == "Inches" {
-      conversionFactor = 0.0393701
-    } else {
-      conversionFactor = 1.0 // Handle similar units or extend logic for others
-    }
+//        guard let inputUnit = resolveUnit(from: selectedInputUnit, for: selectedConversionType),
+//              let outputUnit = resolveUnit(from: selectedOutputUnit, for: selectedConversionType) else {
+//            outputValue = "Invalid Units"
+//            return
+//        }
     
-    let result = input * conversionFactor
+//    let inputUnit = selectedConversionType.resolveUnit(from: selectedInputUnit)
+//    let outputUnit = selectedConversionType.resolveUnit(from: selectedOutputUnit)
+    
+    var result: Double = 0.0
+    
+    //    switch selectedConversionType {
+    //    case .length:
+    //        result = Length.convert(value: input, from: inputUnit as! UnitLength, to: outputUnit as! UnitLength)
+    //    case .duration:
+    //        result = Duration.convert(value: input, from: inputUnit as! UnitDuration, to: outputUnit as! UnitDuration)
+    //    default:
+    //        result = 0.0
+    //    }
+
+    switch selectedConversionType {
+    case .length:
+        result = Length.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .duration:
+        result = Duration.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    default:
+        result = 0.0
+    }
+
+//    if selectedConversionType == .duration {
+//      if selectedInputUnit == "Hours" {
+//        if selectedOutputUnit == "Minutes" {
+//          result = Duration.convert(value: input, from: .hours, to: .minutes)
+//        } else if selectedOutputUnit == "Seconds" {
+//          result = Duration.convert(value: input, from: .hours, to: .seconds)
+//        } else {
+//          result = 0.0
+//        }
+//      } else if selectedInputUnit == "Minutes" {
+//        if selectedInputUnit == "Seconds" {
+//          result = Duration.convert(value: input, from: .minutes, to: .seconds)
+//        } else if selectedOutputUnit == "Hours" {
+//          result = Duration.convert(value: input, from: .minutes, to: .hours)
+//        } else {
+//          result = 0.0
+//        }
+//      } else {
+//        result = 0.0
+//      }
+//    } else if selectedConversionType == .length {
+//      if selectedInputUnit == "Inches" {
+//        if selectedOutputUnit == "Millimeters" {
+//          result = Length.convert(value: input, from: .inches, to: .millimeters)
+//        } else if selectedOutputUnit == "Meters" {
+//          result = Length.convert(value: input, from: .inches, to: .meters)
+//        } else if selectedOutputUnit == "Angstroms" {
+//          result = Length.convert(value: input, from: .inches, to: .angstroms)
+//        } else if selectedOutputUnit == "Centimeters" {
+//          result = Length.convert(value: input, from: .inches, to: .centimeters)
+//        } else if selectedOutputUnit == "Nanometers" {
+//          result = Length.convert(value: input, from: .inches, to: .nanometers)
+//        } else if selectedOutputUnit == "Picometers" {
+//          result = Length.convert(value: input, from: .inches, to: .picometers)
+//        } else {
+//          result = 0.0
+//        }
+//      } else if selectedInputUnit == "Millimeters" {
+//        if selectedOutputUnit == "Inches" {
+//          result = Length.convert(value: input, from: .millimeters, to: .inches)
+//        } else {
+//          result = 0.0
+//        }
+//      } else {
+//        result = 0.0
+//      }
+//    }
     outputValue = String(format: "%.2f", result)
   }
 }
