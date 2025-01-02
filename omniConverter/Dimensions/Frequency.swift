@@ -17,6 +17,7 @@ enum Frequency: String, CaseIterable, Identifiable {
   case millihertz = "Millihertz"
   case nanohertz = "Nanohertz"
   case terahertz = "Terahertz"
+  case framesPerSecond = "Frames per Second"
   
   var id: String { self.rawValue }
   
@@ -63,6 +64,8 @@ extension UnitFrequency {
         dict[type.rawValue] = .nanohertz
       case .terahertz:
         dict[type.rawValue] = .terahertz
+      case .framesPerSecond:
+        dict[type.rawValue] = .framesPerSecond
       }
     }
   }()
