@@ -12,6 +12,10 @@ enum Duration: String, CaseIterable, Identifiable {
   case hours = "Hours"
   case minutes = "Minutes"
   case seconds = "Seconds"
+  case milliseconds = "Milliseconds"
+  case microseconds = "Microseconds"
+  case nanoseconds = "Nanoseconds"
+  case picoseconds = "Picoseconds"
   
   var id: String { self.rawValue }
   
@@ -48,6 +52,14 @@ extension UnitDuration {
         dict[type.rawValue] = .minutes
       case .seconds:
         dict[type.rawValue] = .seconds
+      case .milliseconds:
+        dict[type.rawValue] = .milliseconds
+      case .microseconds:
+        dict[type.rawValue] = .microseconds
+      case .nanoseconds:
+        dict[type.rawValue] = nanoseconds
+      case .picoseconds:
+        dict[type.rawValue] = .picoseconds
       }
     }
   }()
