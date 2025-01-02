@@ -83,6 +83,8 @@ extension MainViewModel {
       result = Angle.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .area:
       result = Area.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+    case .concentrationMass:
+      result = ConcentrationMass.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .density:
       result = Density.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .duration:

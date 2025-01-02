@@ -12,6 +12,7 @@ enum ConversionType: String, CaseIterable, Identifiable {
   case acceleration = "Acceleration"
   case angle = "Angle"
   case area = "Area"
+  case concentrationMass = "Concentration Mass"
   case density = "Density"
   case dispersion = "Dispersion"
   case duration = "Duration"
@@ -45,6 +46,8 @@ enum ConversionType: String, CaseIterable, Identifiable {
       return UnitAngle.self
     case .area:
       return UnitArea.self
+    case .concentrationMass:
+      return UnitConcentrationMass.self
     case .density:
       return UnitDensity.self
     case .dispersion:
@@ -92,18 +95,14 @@ enum ConversionType: String, CaseIterable, Identifiable {
   
   var imageName: String {
     switch self {
-    case .length:
-      return "ruler"
-    case .mass:
-      return "scalemass"
-    case .temperature:
-      return "thermometer"
     case .acceleration:
       return "gauge"
     case .angle:
       return "angle"
     case .area:
       return "square.grid.2x2"
+    case .concentrationMass:
+      return "cube.fill"
     case .density:
       return "cube.fill"
     case .dispersion:
@@ -128,6 +127,10 @@ enum ConversionType: String, CaseIterable, Identifiable {
       return "lightbulb"
     case .informationStorage:
       return "swiftdata"
+    case .length:
+      return "ruler"
+    case .mass:
+      return "scalemass"
     case .power:
       return "powerplug.fill"
     case .pressure:
@@ -138,6 +141,8 @@ enum ConversionType: String, CaseIterable, Identifiable {
       return "radiowaves.right"
     case .speed:
       return "speedometer"
+    case .temperature:
+      return "thermometer"
     case .volume:
       return "cube"
     }
@@ -153,6 +158,8 @@ extension ConversionType {
       return Angle.allCases.names
     case .area:
       return Area.allCases.names
+    case .concentrationMass:
+      return ConcentrationMass.allCases.names
     case .density:
       return Density.allCases.names
     case .dispersion:
@@ -208,6 +215,8 @@ extension String {
       return UnitAngle.allUnits[self]
     case is UnitArea.Type:
       return UnitArea.allUnits[self]
+    case is UnitConcentrationMass.Type:
+      return UnitConcentrationMass.allUnits[self]
     case is UnitDensity.Type:
       return UnitDensity.allUnits[self]
     case is UnitDispersion.Type:
