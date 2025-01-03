@@ -17,6 +17,10 @@ class MainViewModel: ObservableObject {
   @Published var isInputUnitSelectorOpen: Bool = false
   @Published var isOutputUnitSelectorOpen: Bool = false
   @Published var searchQuery: String = ""
+  
+  // for calculator functions
+  @Published var firstOperand: Double? = nil
+  @Published var currentOperator: String? = nil
 }
 
 extension MainViewModel {
@@ -52,14 +56,48 @@ extension MainViewModel {
   func handleKeyPress(_ key: String) {
     switch key {
     case "C":
+      // Clear input and output
       inputValue = "0"
       outputValue = "0"
     case "⌫":
+      // Remove the last character
       inputValue = String(inputValue.dropLast())
       if inputValue.isEmpty { inputValue = "0" }
+    case ".":
+      // Allow only one decimal point
+      if !inputValue.contains(".") {
+        inputValue.append(key)
+      }
+    case "%":
+      // Convert input to percentage
+      if let value = Double(inputValue) {
+        inputValue = String(value / 100)
+      }
+    case "±":
+      // Toggle sign
+      if let value = Double(inputValue) {
+        inputValue = String(-value)
+      }
+    case "÷", "×", "-", "+":
+      // Handle operators (store current input and operator)
+      if let value = Double(inputValue) {
+        firstOperand = value
+        currentOperator = key
+        inputValue = "0" // Clear input for the second operand
+      }
+    case "=":
+      // Perform calculation
+      if let firstOperand = firstOperand,
+         let secondOperand = Double(inputValue),
+         let result = calculateResult(firstOperand: firstOperand, secondOperand: secondOperand, operator: currentOperator ?? "") {
+        inputValue = String(result)
+        self.firstOperand = nil
+        currentOperator = nil
+      }
     default:
-      if inputValue == "0" {
-        inputValue = key
+      // Handle numeric input
+      if inputValue == "0" && key != "." {
+        inputValue = key // Replace leading "0" with the new digit
       } else {
         inputValue.append(key)
       }
@@ -67,6 +105,21 @@ extension MainViewModel {
     calculateOutput()
   }
   
+  private func calculateResult(firstOperand: Double, secondOperand: Double, operator op: String) -> Double? {
+    switch op {
+    case "÷":
+      return secondOperand == 0 ? nil : firstOperand / secondOperand
+    case "×":
+      return firstOperand * secondOperand
+    case "-":
+      return firstOperand - secondOperand
+    case "+":
+      return firstOperand + secondOperand
+    default:
+      return nil
+    }
+  }
+
   // Convert the input value based on selected units
   private func calculateOutput() {
     guard let input = Double(inputValue) else {
