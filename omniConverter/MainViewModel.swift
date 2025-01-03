@@ -5,23 +5,47 @@
 //  Created by John Florian on 12/19/24.
 //
 
-import Foundation
+import Combine
+import SwiftUI
 
 class MainViewModel: ObservableObject {
-  @Published var inputValue: String = "0"
-  @Published var outputValue: String = "0"
+  @AppStorage("selectedConversionType") var selectedConversionTypeStored: ConversionType = .length
+  @AppStorage("selectedInputUnit") var selectedInputUnitStored: String = "Inches"
+  @AppStorage("selectedOutputUnit") var selectedOutputUnitStored: String = "Millimeters"
   @Published var selectedConversionType: ConversionType = .length
   @Published var selectedInputUnit: String = "Inches"
   @Published var selectedOutputUnit: String = "Millimeters"
+  
   @Published var isConversionTypeSelectorOpen: Bool = false
-  @Published var isInputUnitSelectorOpen: Bool = false
-  @Published var isOutputUnitSelectorOpen: Bool = false
-  @Published var searchQuery: String = ""
+  //  @Published var searchQuery: String = ""
+  @Published var inputValue: String = "0"
+  @Published var outputValue: String = "0"
   
   // for calculator functions
   @Published var firstOperand: Double? = nil
   @Published var currentOperator: String? = nil
   @Published var rawInputValue: String = "0"
+  
+  private var cancellables = Set<AnyCancellable>()
+  
+  init() {
+    // Initialize Published properties with the stored values
+    selectedConversionType = selectedConversionTypeStored
+    selectedInputUnit = selectedInputUnitStored
+    selectedOutputUnit = selectedOutputUnitStored
+    
+    $selectedConversionType
+      .sink { [weak self] newValue in self?.selectedConversionTypeStored = newValue }
+      .store(in: &cancellables)
+    
+    $selectedInputUnit
+      .sink { [weak self] newValue in self?.selectedInputUnitStored = newValue }
+      .store(in: &cancellables)
+    
+    $selectedOutputUnit
+      .sink { [weak self] newValue in self?.selectedOutputUnitStored = newValue }
+      .store(in: &cancellables)
+  }
 }
 
 extension MainViewModel {
