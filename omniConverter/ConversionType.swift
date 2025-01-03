@@ -24,7 +24,7 @@ enum ConversionType: String, CaseIterable, Identifiable {
   case frequency = "Frequency"
   case fuelEfficiency = "Fuel Efficiency"
   case illuminance = "Illuminance"
-  case informationStorage = "InformationStorage"
+  case informationStorage = "Information Storage"
   case length = "Length"
   case mass = "Mass"
   case power = "Power"
