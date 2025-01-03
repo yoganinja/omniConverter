@@ -44,6 +44,16 @@ enum Length: String, CaseIterable, Identifiable {
   case thous = "Thous"
   case scandinavianMiles = "Scandinavian Miles"
   case yards = "Yards"
+  case mo = "Mō"
+  case rin = "Rin"
+  case bu = "Bu"
+  case sun = "Sun"
+  case shaku = "Shaku"
+  case ken = "Ken"
+  case hiro = "Hiro"
+  case jo = "Jō"
+  case cho = "Chō"
+  case ri = "Ri"
   
   var id: String { self.rawValue }
   
@@ -146,6 +156,26 @@ extension UnitLength {
         dict[type.rawValue] = .thous
       case .bananas:
         dict[type.rawValue] = .bananas
+      case .mo:
+        dict[type.rawValue] = .mo
+      case .rin:
+        dict[type.rawValue] = .rin
+      case .bu:
+        dict[type.rawValue] = .bu
+      case .sun:
+        dict[type.rawValue] = .sun
+      case .shaku:
+        dict[type.rawValue] = .shaku
+      case .ken:
+        dict[type.rawValue] = .ken
+      case .hiro:
+        dict[type.rawValue] = .hiro
+      case .jo:
+        dict[type.rawValue] = .jo
+      case .cho:
+        dict[type.rawValue] = .cho
+      case .ri:
+        dict[type.rawValue] = .ri
       }
     }
   }()
@@ -256,6 +286,76 @@ extension UnitLength {
     return UnitLength(
       symbol: "bnna",
       converter: UnitConverterLinear(coefficient: 0.1905))
+  }
+  
+  static var mo: UnitLength {
+    // 1 mo = 0.0000254 meters
+    return UnitLength(
+      symbol: "毛",
+      converter: UnitConverterLinear(coefficient: 1/33000))
+  }
+  
+  static var rin: UnitLength {
+    // 1 rin = 0.0000254 meters
+    return UnitLength(
+      symbol: "厘",
+      converter: UnitConverterLinear(coefficient: 1/3300))
+  }
+  
+  static var bu: UnitLength {
+    // 1 bu = 0.0000254 meters
+    return UnitLength(
+      symbol: "分",
+      converter: UnitConverterLinear(coefficient: 1/330))
+  }
+  
+  static var sun: UnitLength {
+    // 1 sun = 0.0000254 meters
+    return UnitLength(
+      symbol: "寸",
+      converter: UnitConverterLinear(coefficient: 1/33))
+  }
+  
+  static var shaku: UnitLength {
+    // 1 shaku = 0.0000254 meters
+    return UnitLength(
+      symbol: "尺",
+      converter: UnitConverterLinear(coefficient: 10/33))
+  }
+  
+  static var ken: UnitLength {
+    // 1 ken = 0.0000254 meters
+    return UnitLength(
+      symbol: "間",
+      converter: UnitConverterLinear(coefficient: 20/11))
+  }
+  
+  static var hiro: UnitLength {
+    // 1 hiro = 0.0000254 meters
+    return UnitLength(
+      symbol: "尋",
+      converter: UnitConverterLinear(coefficient: 20/11))
+  }
+  
+  static var jo: UnitLength {
+    // 1 jo = 0.0000254 meters
+    return UnitLength(
+      symbol: "丈",
+      converter: UnitConverterLinear(coefficient: 100/33))
+  }
+  
+  static var cho: UnitLength {
+    // 1 cho = 0.0000254 meters
+    return UnitLength(
+      symbol: "町",
+      converter: UnitConverterLinear(coefficient: 1200/11))
+  }
+  
+  static var ri: UnitLength {
+    // 1 ri = 0.0000254 meters
+    return UnitLength(
+      symbol: "里",
+      converter: UnitConverterLinear(coefficient: 43200/11))
   }
 }
 
