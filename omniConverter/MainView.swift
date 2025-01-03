@@ -112,6 +112,8 @@ struct MainView: View {
                     HStack(alignment: .lastTextBaseline) {
                       Text(vm.inputValue)
                         .font(.largeTitle)
+                        .minimumScaleFactor(0.5) // Adjust this factor as needed
+                        .lineLimit(1) // Ensure single-line display
                         .padding(.vertical, 4)
                       Text("\(vm.selectedInputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
                         .font(.subheadline)
@@ -158,8 +160,10 @@ struct MainView: View {
                     
                     HStack(alignment: .lastTextBaseline) {
                       Text(vm.outputValue)
-                        .font(.largeTitle)
-                        .padding(.vertical, 4)
+                          .font(.largeTitle)
+                          .minimumScaleFactor(0.5) // Adjust this factor as needed
+                          .lineLimit(1) // Ensure single-line display
+                          .padding(.vertical, 4)
                       Text("\(vm.selectedOutputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
                         .font(.subheadline)
                     }

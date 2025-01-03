@@ -23,7 +23,7 @@ extension MainViewModel {
   func updateConversionType() {
     selectedInputUnit = selectedConversionType.unitTypeNames.first ?? ""
     selectedOutputUnit = selectedConversionType.unitTypeNames.dropFirst().first
-      ?? selectedConversionType.unitTypeNames.first ?? ""
+    ?? selectedConversionType.unitTypeNames.first ?? ""
     
     calculateOutput()
   }
@@ -41,11 +41,11 @@ extension MainViewModel {
     selectedInputUnit = selectedOutputUnit
     selectedOutputUnit = tempUnit
     
-//    let tempValue = inputValue
-//    inputValue = outputValue
-//    outputValue = tempValue
+    //    let tempValue = inputValue
+    //    inputValue = outputValue
+    //    outputValue = tempValue
     
-//    calculateOutput()
+    //    calculateOutput()
   }
   
   // Handle keyboard key press logic
@@ -70,7 +70,7 @@ extension MainViewModel {
   // Convert the input value based on selected units
   private func calculateOutput() {
     guard let input = Double(inputValue) else {
-      outputValue = String(format: "%.2f", 0)
+      outputValue = formatNumber(0)
       return
     }
     
@@ -88,11 +88,11 @@ extension MainViewModel {
     case .density:
       result = Density.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .duration:
-        result = Duration.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Duration.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .electricCharge:
       result = ElectricCharge.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .length:
-        result = Length.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Length.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .dispersion:
       result = Dispersion.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     case .electricCurrent:
@@ -128,8 +128,17 @@ extension MainViewModel {
     case .volume:
       result = Volume.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
     }
-
-    outputValue = String(format: "%.2f", result)
+    
+    outputValue = formatNumber(result)
+  }
+  
+  private func formatNumber(_ value: Double) -> String {
+    if value.truncatingRemainder(dividingBy: 1) == 0 {
+      // If the value is a whole number, show no decimal places
+      return String(format: "%.0f", value)
+    } else {
+      // If the value has significant decimal digits, show all significant digits
+      return String(value)
+    }
   }
 }
-
