@@ -11,19 +11,19 @@ import Foundation
 enum Acceleration: String, CaseIterable, Identifiable {
   case gravity = "Earth Gravity"
   case metersPerSecondSquared = "Meters per Second Squared"
-//  case centigal = "Centigal"
-//  case decigal = "Decigal"
 //  case decimetersPerSecondSquared = "Decimeters per Second Squared"
 //  case feetPerSecondSquared = "Feet per Second Squared"
-//  case galileo = "Galileo"
+  case galileos = "Galileos"
+    case decigals = "Decigals"
+    case centigals = "Centigals"
+  case milligals = "Milligals"
+  case microgals = "Microgals"
 //  case inchesPerSecondSquared = "Inches per Second Squared"
 //  case kilometersPerSecondSquared = "Kilometers per Second Squared"
 //  case knotsPerSecondSquared = "Knots per Second Squared"
-//  case microgal = "Microgal"
 //  case milesPerHourMinute = "Miles per Hour Minute"
 //  case milesPerHourSecond = "Miles per Hour Second"
 //  case milesPerSecondSquared = "Miles per Second Squared"
-//  case milligal = "Milligal"
 //  case yardsPerSecondSquared = "Yards per Second Squared"
   
   var id: String { self.rawValue }
@@ -59,6 +59,16 @@ extension UnitAcceleration {
         dict[type.rawValue] = .gravity
       case .metersPerSecondSquared:
         dict[type.rawValue] = .metersPerSecondSquared
+      case .galileos:
+        dict[type.rawValue] = .galileos
+      case .decigals:
+        dict[type.rawValue] = .decigals
+      case .centigals:
+        dict[type.rawValue] = .centigals
+      case .milligals:
+        dict[type.rawValue] = .milligals
+      case .microgals:
+        dict[type.rawValue] = .microgals
       }
     }
   }()
@@ -76,5 +86,42 @@ extension String {
     }
     
     return nil
+  }
+}
+
+extension UnitAcceleration {
+  static var galileos: UnitAcceleration {
+    // 1 galileos = 0.01 meters/second-squared
+    return UnitAcceleration(
+      symbol: "Gal",
+      converter: UnitConverterLinear(coefficient: 0.01))
+  }
+
+  static var decigals: UnitAcceleration {
+    // 1 decigals = 0.001 meters/second-squared
+    return UnitAcceleration(
+      symbol: "dGal",
+      converter: UnitConverterLinear(coefficient: 0.001))
+  }
+
+  static var centigals: UnitAcceleration {
+    // 1 centigal = 0.0001 meters/second-squared
+    return UnitAcceleration(
+      symbol: "cGal",
+      converter: UnitConverterLinear(coefficient: 0.0001))
+  }
+
+  static var milligals: UnitAcceleration {
+    // 1 galileos = 0.00001 meters/second-squared
+    return UnitAcceleration(
+      symbol: "mGal",
+      converter: UnitConverterLinear(coefficient: 0.00001))
+  }
+
+  static var microgals: UnitAcceleration {
+    // 1 galileos = 0.00000001 meters/second-squared
+    return UnitAcceleration(
+      symbol: "μGal",
+      converter: UnitConverterLinear(coefficient: 0.00000001))
   }
 }
