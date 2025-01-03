@@ -9,10 +9,13 @@
 import Foundation
 
 enum Illuminance: String, CaseIterable, Identifiable {
+  case phot = "Phot"
+  case kilolux = "Kilolux"
+  case footcandle = "Foot-Candle"
+  case metercandle = "Meter-Candle"
   case lux = "Lux"
-//  case nox = "Nox"
-//  case phot = "Phot"
-//  case kilolux = "Kilolux"
+  case millilux = "Millilux"
+  case nox = "Nox"
 //  case lumenPerCentimeter = "Lumen per Centimeter"
 //  case lumenPerMeter = "Lumen per Meter"
 //  case lumenPerFoot = "Lumen per Foot"
@@ -49,6 +52,18 @@ extension UnitIlluminance {
       switch type {
       case .lux:
         dict[type.rawValue] = .lux
+      case .phot:
+        dict[type.rawValue] = .phot
+      case .kilolux:
+        dict[type.rawValue] = .kilolux
+      case .footcandle:
+        dict[type.rawValue] = .footcandle
+      case .metercandle:
+        dict[type.rawValue] = .metercandle
+      case .millilux:
+        dict[type.rawValue] = .millilux
+      case .nox:
+        dict[type.rawValue] = .nox
       }
     }
   }()
@@ -66,5 +81,49 @@ extension String {
     }
     
     return nil
+  }
+}
+
+extension UnitIlluminance {
+  static var phot: UnitIlluminance {
+    // 1 phot = 10000 lux
+    return UnitIlluminance(
+      symbol: "ph",
+      converter: UnitConverterLinear(coefficient: 10000))
+  }
+  
+  static var kilolux: UnitIlluminance {
+    // 1 kilolux = 1000 lux
+    return UnitIlluminance(
+      symbol: "klx",
+      converter: UnitConverterLinear(coefficient: 1000))
+  }
+  
+  static var millilux: UnitIlluminance {
+    // 1 millilux = 1/1000 lux
+    return UnitIlluminance(
+      symbol: "mlx",
+      converter: UnitConverterLinear(coefficient: 1/1000))
+  }
+  
+  static var nox: UnitIlluminance {
+    // 1 nox = 1/1000 lux
+    return UnitIlluminance(
+      symbol: "nx",
+      converter: UnitConverterLinear(coefficient: 1/1000))
+  }
+  
+  static var footcandle: UnitIlluminance {
+    // 1 footcandle = 10.764 lux
+    return UnitIlluminance(
+      symbol: "fc",
+      converter: UnitConverterLinear(coefficient: 10.764))
+  }
+  
+  static var metercandle: UnitIlluminance {
+    // 1 metercandle = 1 lux
+    return UnitIlluminance(
+      symbol: "mc",
+      converter: UnitConverterLinear(coefficient: 1))
   }
 }
