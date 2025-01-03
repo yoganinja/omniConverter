@@ -154,8 +154,6 @@ extension UnitLength {
         dict[type.rawValue] = .steps
       case .thous:
         dict[type.rawValue] = .thous
-      case .bananas:
-        dict[type.rawValue] = .bananas
       case .mo:
         dict[type.rawValue] = .mo
       case .rin:
