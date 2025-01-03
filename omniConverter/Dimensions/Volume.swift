@@ -36,6 +36,7 @@ enum Volume: String, CaseIterable, Identifiable {
   case megaliters = "Megaliters"
   case metricCups = "Metric Cups"
   case milliliters = "Milliliters"
+  case pecks = "Pecks"
   case pints = "Pints"
   case quarts = "Quarts"
   case tablespoons = "Tablespoons"
@@ -124,6 +125,8 @@ extension UnitVolume {
         dict[type.rawValue] = .metricCups
       case .milliliters:
         dict[type.rawValue] = .milliliters
+      case .pecks:
+        dict[type.rawValue] = .pecks
       case .pints:
         dict[type.rawValue] = .pints
       case .quarts:
@@ -149,5 +152,14 @@ extension String {
     }
     
     return nil
+  }
+}
+
+extension UnitVolume {
+  static var pecks: UnitVolume {
+    // 1 peck = 8.80976754172 liters
+    return UnitVolume(
+      symbol: "pk",
+      converter: UnitConverterLinear(coefficient: 8.80976754172))
   }
 }
