@@ -11,6 +11,8 @@ import Foundation
 enum Length: String, CaseIterable, Identifiable {
   case angstroms = "Angstroms"
   case astronomicalUnits = "Astronomical Units"
+  case bananas = "Bananas"
+  case chains = "Chains"
   case centimeters = "Centimeters"
   case decameters = "Decameters"
   case decimeters = "Decimeters"
@@ -21,9 +23,14 @@ enum Length: String, CaseIterable, Identifiable {
   case inches = "Inches"
   case kilometers = "Kilometers"
   case leagues = "Leagues"
-  case lightyears = "Lightyears"
+  case lightyears = "Light-Years"
+  case lightdays = "Light-Days"
+  case lighthours = "Light-Hours"
+  case lightminutes = "Light-Minutes"
+  case lightseconds = "Light-Seconds"
   case megameters = "Megameters"
   case meters = "Meters"
+  case microinches = "Microinches"
   case micrometers = "Micrometers"
   case miles = "Miles"
   case millimeters = "Millimeters"
@@ -32,6 +39,9 @@ enum Length: String, CaseIterable, Identifiable {
   case nauticalMiles = "Nautical Miles"
   case parsecs = "Parsecs"
   case picometers = "Picometers"
+  case rods = "Rods"
+  case steps = "Steps"
+  case thous = "Thous"
   case scandinavianMiles = "Scandinavian Miles"
   case yards = "Yards"
   
@@ -68,6 +78,10 @@ extension UnitLength {
         dict[type.rawValue] = .angstroms
       case .astronomicalUnits:
         dict[type.rawValue] = .astronomicalUnits
+      case .bananas:
+        dict[type.rawValue] = .bananas
+      case .chains:
+        dict[type.rawValue] = .chains
       case .centimeters:
         dict[type.rawValue] = .centimeters
       case .decameters:
@@ -90,10 +104,20 @@ extension UnitLength {
         dict[type.rawValue] = .leagues
       case .lightyears:
         dict[type.rawValue] = .lightyears
+      case .lightdays:
+        dict[type.rawValue] = .lightdays
+      case .lighthours:
+        dict[type.rawValue] = .lighthours
+      case .lightminutes:
+        dict[type.rawValue] = .lightminutes
+      case .lightseconds:
+        dict[type.rawValue] = .lightseconds
       case .megameters:
         dict[type.rawValue] = .megameters
       case .meters:
         dict[type.rawValue] = .meters
+      case .microinches:
+        dict[type.rawValue] = .microinches
       case .micrometers:
         dict[type.rawValue] = .micrometers
       case .miles:
@@ -114,6 +138,14 @@ extension UnitLength {
         dict[type.rawValue] = .scandinavianMiles
       case .yards:
         dict[type.rawValue] = .yards
+      case .rods:
+        dict[type.rawValue] = .rods
+      case .steps:
+        dict[type.rawValue] = .steps
+      case .thous:
+        dict[type.rawValue] = .thous
+      case .bananas:
+        dict[type.rawValue] = .bananas
       }
     }
   }()
@@ -146,7 +178,7 @@ extension UnitLength {
     // 1 league = 4828 meters
     return UnitLength(
       symbol: "leag",
-      converter: UnitConverterLinear(coefficient: 4828))
+      converter: UnitConverterLinear(coefficient: 4828.0417))
   }
   
   static var angstroms: UnitLength {
@@ -154,6 +186,76 @@ extension UnitLength {
     return UnitLength(
       symbol: "Å",
       converter: UnitConverterLinear(coefficient: 1.0e-10))
+  }
+  
+  static var chains: UnitLength {
+    // 1 chain = 20.116840233700003 meters
+    return UnitLength(
+      symbol: "ch",
+      converter: UnitConverterLinear(coefficient: 20.116840233700003))
+  }
+  
+  static var microinches: UnitLength {
+    // 1 microinch = 0.0000000254 meters
+    return UnitLength(
+      symbol: "μin",
+      converter: UnitConverterLinear(coefficient: 0.0000000254))
+  }
+  
+  static var lightdays: UnitLength {
+    // 1 lightday = 25902068371000.003 meters
+    return UnitLength(
+      symbol: "l-day",
+      converter: UnitConverterLinear(coefficient: 25902068371000.003))
+  }
+  
+  static var lighthours: UnitLength {
+    // 1 lighthour = 1079252848800 meters
+    return UnitLength(
+      symbol: "l-hr",
+      converter: UnitConverterLinear(coefficient: 1079252848800))
+  }
+  
+  static var lightminutes: UnitLength {
+    // 1 lightminute = 17987547480 meters
+    return UnitLength(
+      symbol: "l-min",
+      converter: UnitConverterLinear(coefficient: 17987547480))
+  }
+  
+  static var lightseconds: UnitLength {
+    // 1 lightsecond = 299792458 meters
+    return UnitLength(
+      symbol: "l-sec",
+      converter: UnitConverterLinear(coefficient: 299792458))
+  }
+  
+  static var rods: UnitLength {
+    // 1 rod = 5.029 meters
+    return UnitLength(
+      symbol: "rod",
+      converter: UnitConverterLinear(coefficient: 5.029))
+  }
+  
+  static var steps: UnitLength {
+    // 1 step = 0.762 meters
+    return UnitLength(
+      symbol: "step",
+      converter: UnitConverterLinear(coefficient: 0.762))
+  }
+  
+  static var thous: UnitLength {
+    // 1 thou = 0.0000254 meters
+    return UnitLength(
+      symbol: "th",
+      converter: UnitConverterLinear(coefficient: 0.0000254))
+  }
+  
+  static var bananas: UnitLength {
+    // 1 banana = 0.0000254 meters
+    return UnitLength(
+      symbol: "bnna",
+      converter: UnitConverterLinear(coefficient: 0.1905))
   }
 }
 
