@@ -9,6 +9,7 @@
 import Foundation
 
 enum Mass: String, CaseIterable, Identifiable {
+  case bananas = "Bananas"
   case carats = "Carats"
   case centigrams = "Centigrams"
   case decigrams = "Decigrams"
@@ -56,6 +57,8 @@ extension UnitMass {
   static let allUnits: [String: UnitMass] = {
     Mass.allCases.reduce(into: [String: UnitMass]()) { dict, type in
       switch type {
+      case .bananas:
+        dict[type.rawValue] = .bananas
       case .carats:
         dict[type.rawValue] = .carats
       case .centigrams:
@@ -118,6 +121,13 @@ extension UnitMass {
     return UnitMass(
       symbol: "gr",
       converter: UnitConverterLinear(coefficient: 6.47989e-5))
+  }
+  
+  static var bananas: UnitMass {
+    // 1 banana = 0.175 kilograms
+    return UnitMass(
+      symbol: "bnna",
+      converter: UnitConverterLinear(coefficient: 0.175))
   }
 }
 
