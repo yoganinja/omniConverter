@@ -66,11 +66,15 @@ enum Length: String, CaseIterable, Identifiable {
     }
   }
   
-  static func convert(value: Double, from input: String, to output: String) -> Double {
-    let from = self.unit(from: input)
-    let to = self.unit(from: output)
+  static func convert(value: Double, from input: String, to output: String) -> Double? {
+    guard
+      let from = self.unit(from: input),
+      let to = self.unit(from: output)
+    else {
+      return nil
+    }
     
-    let result = self.convert(value: value, from: from!, to: to!)
+    let result = self.convert(value: value, from: from, to: to)
     
     return result
   }

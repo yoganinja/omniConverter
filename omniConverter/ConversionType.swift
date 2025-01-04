@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUICore
 
-enum ConversionType: String, CaseIterable, Identifiable {
+enum ConversionType: String, CaseIterable, Identifiable, Codable {
   case acceleration = "Acceleration"
   case angle = "Angle"
   case area = "Area"
