@@ -169,7 +169,9 @@ extension MainViewModel {
     return formattedWholeNumber + fractionalPart
   }
   
-  private func formatNumber(_ value: Double, preserveDecimals: Bool? = nil) -> String {
+  private func formatNumber(_ value: Double?, preserveDecimals: Bool? = nil) -> String {
+    guard let value = value else { return "" }
+    
     let formatter = NumberFormatter()
     
     formatter.numberStyle = .decimal
@@ -200,7 +202,7 @@ extension MainViewModel {
       return
     }
     
-    var result: Double = 0.0
+    var result: Double? = 0.0
     
     switch selectedConversionType {
     case .acceleration:
