@@ -5,16 +5,11 @@
 //  Created by John Florian on 12/19/24.
 //
 
-import Combine
-import SwiftUI
+import Foundation
+//import Combine
 
 class MainViewModel: ObservableObject {
-  @AppStorage("selectedConversionType") var selectedConversionTypeStored: ConversionType = .length
-  @AppStorage("selectedInputUnit") var selectedInputUnitStored: String = "Inches"
-  @AppStorage("selectedOutputUnit") var selectedOutputUnitStored: String = "Millimeters"
-  @Published var selectedConversionType: ConversionType = .length
-  @Published var selectedInputUnit: String = "Inches"
-  @Published var selectedOutputUnit: String = "Millimeters"
+  private let appState: AppState
   
   @Published var isConversionTypeSelectorOpen: Bool = false
   //  @Published var searchQuery: String = ""
@@ -26,33 +21,16 @@ class MainViewModel: ObservableObject {
   @Published var currentOperator: String? = nil
   @Published var rawInputValue: String = "0"
   
-  private var cancellables = Set<AnyCancellable>()
-  
-  init() {
-    // Initialize Published properties with the stored values
-    selectedConversionType = selectedConversionTypeStored
-    selectedInputUnit = selectedInputUnitStored
-    selectedOutputUnit = selectedOutputUnitStored
-    
-    $selectedConversionType
-      .sink { [weak self] newValue in self?.selectedConversionTypeStored = newValue }
-      .store(in: &cancellables)
-    
-    $selectedInputUnit
-      .sink { [weak self] newValue in self?.selectedInputUnitStored = newValue }
-      .store(in: &cancellables)
-    
-    $selectedOutputUnit
-      .sink { [weak self] newValue in self?.selectedOutputUnitStored = newValue }
-      .store(in: &cancellables)
+  init(appState: AppState) {
+    self.appState = appState
   }
 }
 
 extension MainViewModel {
   func updateConversionType() {
-    selectedInputUnit = selectedConversionType.unitTypeNames.first ?? ""
-    selectedOutputUnit = selectedConversionType.unitTypeNames.dropFirst().first
-    ?? selectedConversionType.unitTypeNames.first ?? ""
+    appState.selectedInputUnit = appState.selectedConversionType.unitTypeNames.first ?? ""
+    appState.selectedOutputUnit = appState.selectedConversionType.unitTypeNames.dropFirst().first
+    ?? appState.selectedConversionType.unitTypeNames.first ?? ""
     
     calculateOutput()
   }
@@ -66,9 +44,9 @@ extension MainViewModel {
   }
   
   func swapUnits() {
-    let tempUnit = selectedInputUnit
-    selectedInputUnit = selectedOutputUnit
-    selectedOutputUnit = tempUnit
+    let tempUnit = appState.selectedInputUnit
+    appState.selectedInputUnit = appState.selectedOutputUnit
+    appState.selectedOutputUnit = tempUnit
     
 //    let tempValue = inputValue
 //    inputValue = outputValue
@@ -204,57 +182,57 @@ extension MainViewModel {
     
     var result: Double? = 0.0
     
-    switch selectedConversionType {
+    switch appState.selectedConversionType {
     case .acceleration:
-      result = Acceleration.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Acceleration.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .angle:
-      result = Angle.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Angle.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .area:
-      result = Area.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Area.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .concentrationMass:
-      result = ConcentrationMass.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = ConcentrationMass.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .density:
-      result = Density.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Density.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .duration:
-      result = Duration.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Duration.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .electricCharge:
-      result = ElectricCharge.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = ElectricCharge.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .length:
-      result = Length.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Length.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .dispersion:
-      result = Dispersion.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Dispersion.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .electricCurrent:
-      result = ElectricCurrent.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = ElectricCurrent.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .electricPotentialDifference:
-      result = ElectricPotentialDifference.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = ElectricPotentialDifference.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .electricResistance:
-      result = ElectricResistance.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = ElectricResistance.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .energy:
-      result = Energy.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Energy.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .frequency:
-      result = Frequency.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Frequency.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .fuelEfficiency:
-      result = FuelEfficiency.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = FuelEfficiency.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .illuminance:
-      result = Illuminance.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Illuminance.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .informationStorage:
-      result = InformationStorage.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = InformationStorage.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .mass:
-      result = Mass.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Mass.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .power:
-      result = Power.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Power.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .pressure:
-      result = Pressure.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Pressure.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .radiationDose:
-      result = RadiationDose.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = RadiationDose.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .radioactivity:
-      result = Radioactivity.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Radioactivity.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .speed:
-      result = Speed.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Speed.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .temperature:
-      result = Temperature.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Temperature.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     case .volume:
-      result = Volume.convert(value: input, from: selectedInputUnit, to: selectedOutputUnit)
+      result = Volume.convert(value: input, from: appState.selectedInputUnit, to: appState.selectedOutputUnit)
     }
     
     outputValue = formatNumber(result)

@@ -45,6 +45,7 @@ import SwiftUI
 //}
 
 struct MainView: View {
+  @EnvironmentObject var appState: AppState
   @StateObject var vm: MainViewModel
   
   var body: some View {
@@ -55,11 +56,11 @@ struct MainView: View {
           ValuePicker(
             title: {
               HStack(alignment: .center) {
-                Image(systemName: vm.selectedConversionType.imageName)
+                Image(systemName: appState.selectedConversionType.imageName)
                   .resizable()
                   .frame(width: 24, height: 24)
                   .padding(.vertical)
-                Text(vm.selectedConversionType.id)
+                Text(appState.selectedConversionType.id)
                   .font(.system(size: 32, weight: .bold))
                   .padding(.top, 16)
                   .padding(.bottom, 8)
@@ -71,7 +72,7 @@ struct MainView: View {
               }
               .padding(.vertical, 8)
             },
-            selection: $vm.selectedConversionType,
+            selection: $appState.selectedConversionType,
             isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
           ) {
             ForEach(ConversionType.allCases, id: \.self) { name in
@@ -79,7 +80,7 @@ struct MainView: View {
                 .pickerTag(name)
             }
           }
-          .onChange(of: vm.selectedConversionType) {_ in
+          .onChange(of: appState.selectedConversionType) {_ in
             vm.updateConversionType()
           }
         }
@@ -99,7 +100,7 @@ struct MainView: View {
                 title: {
                   VStack(alignment: .leading) {
                     HStack(alignment: .center) {
-                      Text("\(vm.selectedInputUnit) (\(vm.selectedInputUnit.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
+                      Text("\(appState.selectedInputUnit) (\(appState.selectedInputUnit.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
                       Spacer()
                       Image(systemName: "chevron.right")
                         .resizable()
@@ -115,21 +116,21 @@ struct MainView: View {
                         .minimumScaleFactor(0.5) // Adjust this factor as needed
                         .lineLimit(1) // Ensure single-line display
                         .padding(.vertical, 4)
-                      Text("\(vm.selectedInputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
+                      Text("\(appState.selectedInputUnit.unit(for: appState.selectedConversionType)?.symbol ?? "")")
                         .font(.subheadline)
                     }
                     .foregroundColor(.red)
                   }
                 },
-                selection: $vm.selectedInputUnit,
+                selection: $appState.selectedInputUnit,
                 isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
               ) {
-                ForEach(vm.selectedConversionType.unitTypeNames, id: \.self) { name in
-                  Text(verbatim: "\(name) (\(name.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
+                ForEach(appState.selectedConversionType.unitTypeNames, id: \.self) { name in
+                  Text(verbatim: "\(name) (\(name.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
                     .pickerTag(name)
                 }
               }
-              .onChange(of: vm.selectedInputUnit) {_ in
+              .onChange(of: appState.selectedInputUnit) {_ in
                 vm.updateInputUnit()
               }
             }
@@ -148,7 +149,7 @@ struct MainView: View {
                 title: {
                   VStack(alignment: .leading) {
                     HStack(alignment: .center) {
-                      Text("\(vm.selectedOutputUnit) (\(vm.selectedOutputUnit.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
+                      Text("\(appState.selectedOutputUnit) (\(appState.selectedOutputUnit.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
                       Spacer()
                       Image(systemName: "chevron.right")
                         .resizable()
@@ -164,21 +165,21 @@ struct MainView: View {
                           .minimumScaleFactor(0.5) // Adjust this factor as needed
                           .lineLimit(1) // Ensure single-line display
                           .padding(.vertical, 4)
-                      Text("\(vm.selectedOutputUnit.unit(for: vm.selectedConversionType)?.symbol ?? "")")
+                      Text("\(appState.selectedOutputUnit.unit(for: appState.selectedConversionType)?.symbol ?? "")")
                         .font(.subheadline)
                     }
                     .foregroundColor(.red)
                   }
                 },
-                selection: $vm.selectedOutputUnit,
+                selection: $appState.selectedOutputUnit,
                 isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
               ) {
-                ForEach(vm.selectedConversionType.unitTypeNames, id: \.self) { name in
-                  Text(verbatim: "\(name) (\(name.unit(for: vm.selectedConversionType)?.symbol ?? ""))")
+                ForEach(appState.selectedConversionType.unitTypeNames, id: \.self) { name in
+                  Text(verbatim: "\(name) (\(name.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
                     .pickerTag(name)
                 }
               }
-              .onChange(of: vm.selectedOutputUnit) {_ in
+              .onChange(of: appState.selectedOutputUnit) {_ in
                 vm.updateOutputUnit()
               }
             }

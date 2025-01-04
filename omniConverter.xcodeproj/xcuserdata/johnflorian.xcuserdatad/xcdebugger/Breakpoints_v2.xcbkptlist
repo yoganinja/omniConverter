@@ -30,8 +30,8 @@
             filePath = "omniConverter/MainViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "240"
-            endingLineNumber = "240"
+            startingLineNumber = "218"
+            endingLineNumber = "218"
             landmarkName = "calculateOutput()"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,10 @@
             filePath = "omniConverter/MainViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "288"
-            endingLineNumber = "288">
+            startingLineNumber = "240"
+            endingLineNumber = "240"
+            landmarkName = "MainViewModel"
+            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -60,8 +62,10 @@
             filePath = "omniConverter/MainViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "275"
-            endingLineNumber = "275">
+            startingLineNumber = "227"
+            endingLineNumber = "227"
+            landmarkName = "calculateOutput()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
