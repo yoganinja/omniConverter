@@ -31,10 +31,14 @@ extension MainViewModel {
     if let lastUsed = appState.lastUsed[appState.selectedConversionType] {
       appState.selectedInputUnit = lastUsed.inputUnit
       appState.selectedOutputUnit = lastUsed.outputUnit
-    } else {      
+      rawInputValue = lastUsed.inputValue
+      inputValue = formatInputValue(rawInputValue)
+    } else {
       appState.selectedInputUnit = appState.selectedConversionType.unitTypeNames.first ?? ""
       appState.selectedOutputUnit = appState.selectedConversionType.unitTypeNames.dropFirst().first
       ?? appState.selectedConversionType.unitTypeNames.first ?? ""
+      rawInputValue = "0"
+      inputValue = formatInputValue(rawInputValue)
     }
     
     calculateOutput()
@@ -42,14 +46,14 @@ extension MainViewModel {
   
   func updateInputUnit() {
     appState.lastUsed[appState.selectedConversionType] =
-      InOutUnits(inputUnit: appState.selectedInputUnit, outputUnit: appState.selectedOutputUnit)
+    InOutUnits(inputUnit: appState.selectedInputUnit, outputUnit: appState.selectedOutputUnit, inputValue: rawInputValue)
     
     calculateOutput()
   }
   
   func updateOutputUnit() {
     appState.lastUsed[appState.selectedConversionType] =
-      InOutUnits(inputUnit: appState.selectedInputUnit, outputUnit: appState.selectedOutputUnit)
+    InOutUnits(inputUnit: appState.selectedInputUnit, outputUnit: appState.selectedOutputUnit, inputValue: rawInputValue)
     
     calculateOutput()
   }
@@ -124,8 +128,8 @@ extension MainViewModel {
       }
       inputValue = formatInputValue(rawInputValue)
     }
-    
-    calculateOutput()
+    updateInputUnit()
+//    calculateOutput()
   }
   
   private func formatRawValue(_ value: Double) -> String {

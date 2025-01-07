@@ -11,6 +11,7 @@ import SwiftUI
 struct InOutUnits: Codable {
   var inputUnit: String
   var outputUnit: String
+  var inputValue: String
 }
 
 class AppState: ObservableObject {
@@ -32,9 +33,6 @@ class AppState: ObservableObject {
     
     // Initialize Published properties with the stored values
     selectedConversionType = selectedConversionTypeStored
-    selectedInputUnit = lastUsed[selectedConversionType]?.inputUnit ?? selectedConversionType.unitTypeNames.first ?? ""
-    selectedOutputUnit = lastUsed[selectedConversionType]?.outputUnit ?? selectedConversionType.unitTypeNames.dropFirst().first
-      ?? selectedConversionType.unitTypeNames.first ?? ""
     
     // Observe changes to Published properties and save them to UserDefaults
     $selectedConversionType

@@ -208,6 +208,9 @@ struct MainView: View {
         Spacer()
       }
       .background(Color.red.opacity(0.1).edgesIgnoringSafeArea(.all))
+      .onAppear {
+        vm.updateConversionType()
+      }
     }
   }
 }
