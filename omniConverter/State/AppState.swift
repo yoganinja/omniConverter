@@ -15,32 +15,52 @@ struct InOutUnits: Codable {
 
 class AppState: ObservableObject {
   @AppStorage("selectedConversionType") var selectedConversionTypeStored: ConversionType = .length
-  @AppStorage("selectedInputUnit") var selectedInputUnitStored: String = "Inches"
-  @AppStorage("selectedOutputUnit") var selectedOutputUnitStored: String = "Millimeters"
   @Published var selectedConversionType: ConversionType = .length
   @Published var selectedInputUnit: String = "Inches"
   @Published var selectedOutputUnit: String = "Millimeters"
-  @Published var lastUsed: [ConversionType: InOutUnits] = [.angle: InOutUnits(inputUnit: "Degrees", outputUnit: "Radians")]
+  @Published var lastUsed: [ConversionType: InOutUnits] = [:] {
+    didSet {
+      saveData()
+    }
+  }
   
+  private let persistenceKey = "lastUsedUnits"
   private var cancellables = Set<AnyCancellable>()
   
   init() {
+    loadData()
+    
     // Initialize Published properties with the stored values
     selectedConversionType = selectedConversionTypeStored
-    selectedInputUnit = selectedInputUnitStored
-    selectedOutputUnit = selectedOutputUnitStored
+    selectedInputUnit = lastUsed[selectedConversionType]?.inputUnit ?? selectedConversionType.unitTypeNames.first ?? ""
+    selectedOutputUnit = lastUsed[selectedConversionType]?.outputUnit ?? selectedConversionType.unitTypeNames.dropFirst().first
+      ?? selectedConversionType.unitTypeNames.first ?? ""
     
     // Observe changes to Published properties and save them to UserDefaults
     $selectedConversionType
       .sink { [weak self] newValue in self?.selectedConversionTypeStored = newValue }
       .store(in: &cancellables)
-    
-    $selectedInputUnit
-      .sink { [weak self] newValue in self?.selectedInputUnitStored = newValue }
-      .store(in: &cancellables)
-    
-    $selectedOutputUnit
-      .sink { [weak self] newValue in self?.selectedOutputUnitStored = newValue }
-      .store(in: &cancellables)
+  }
+  
+  // Save data to UserDefaults
+  private func saveData() {
+    do {
+      let encoder = JSONEncoder()
+      let data = try encoder.encode(lastUsed)
+      UserDefaults.standard.set(data, forKey: persistenceKey)
+    } catch {
+      print("Failed to save data: \(error)")
+    }
+  }
+  
+  // Load data from UserDefaults
+  private func loadData() {
+    guard let data = UserDefaults.standard.data(forKey: persistenceKey) else { return }
+    do {
+      let decoder = JSONDecoder()
+      lastUsed = try decoder.decode([ConversionType: InOutUnits].self, from: data)
+    } catch {
+      print("Failed to load data: \(error)")
+    }
   }
 }
