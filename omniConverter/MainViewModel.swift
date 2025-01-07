@@ -28,18 +28,29 @@ class MainViewModel: ObservableObject {
 
 extension MainViewModel {
   func updateConversionType() {
-    appState.selectedInputUnit = appState.selectedConversionType.unitTypeNames.first ?? ""
-    appState.selectedOutputUnit = appState.selectedConversionType.unitTypeNames.dropFirst().first
-    ?? appState.selectedConversionType.unitTypeNames.first ?? ""
+    if let lastUsed = appState.lastUsed[appState.selectedConversionType] {
+      appState.selectedInputUnit = lastUsed.inputUnit
+      appState.selectedOutputUnit = lastUsed.outputUnit
+    } else {      
+      appState.selectedInputUnit = appState.selectedConversionType.unitTypeNames.first ?? ""
+      appState.selectedOutputUnit = appState.selectedConversionType.unitTypeNames.dropFirst().first
+      ?? appState.selectedConversionType.unitTypeNames.first ?? ""
+    }
     
     calculateOutput()
   }
   
   func updateInputUnit() {
+    appState.lastUsed[appState.selectedConversionType] =
+      InOutUnits(inputUnit: appState.selectedInputUnit, outputUnit: appState.selectedOutputUnit)
+    
     calculateOutput()
   }
   
   func updateOutputUnit() {
+    appState.lastUsed[appState.selectedConversionType] =
+      InOutUnits(inputUnit: appState.selectedInputUnit, outputUnit: appState.selectedOutputUnit)
+    
     calculateOutput()
   }
   

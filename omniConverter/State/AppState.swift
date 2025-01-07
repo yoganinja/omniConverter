@@ -8,6 +8,11 @@
 import Combine
 import SwiftUI
 
+struct InOutUnits: Codable {
+  var inputUnit: String
+  var outputUnit: String
+}
+
 class AppState: ObservableObject {
   @AppStorage("selectedConversionType") var selectedConversionTypeStored: ConversionType = .length
   @AppStorage("selectedInputUnit") var selectedInputUnitStored: String = "Inches"
@@ -15,6 +20,7 @@ class AppState: ObservableObject {
   @Published var selectedConversionType: ConversionType = .length
   @Published var selectedInputUnit: String = "Inches"
   @Published var selectedOutputUnit: String = "Millimeters"
+  @Published var lastUsed: [ConversionType: InOutUnits] = [.angle: InOutUnits(inputUnit: "Degrees", outputUnit: "Radians")]
   
   private var cancellables = Set<AnyCancellable>()
   
