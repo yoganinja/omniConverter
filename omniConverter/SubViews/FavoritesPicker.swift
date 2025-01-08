@@ -9,38 +9,39 @@ import SwiftUI
 
 struct FavoritesPicker: View {
   @EnvironmentObject var appState: AppState
-  @State private var isAscending = true
   
   var onSelect: (FavoriteConversion?) -> Void
   
   var body: some View {
     NavigationView {
-      VStack {
-        Button(action: {
-          isAscending.toggle()
-        }) {
-          HStack {
-            Image(systemName: isAscending ? "arrow.up" : "arrow.down")
-            Text("Sort \(isAscending ? "Ascending" : "Descending")")
+      List {
+        HStack {
+          Spacer()
+          Button(action: {
+            appState.isFavoritesSortedAscending.toggle()
+          }) {
+            HStack {
+              Text("Sort")
+                .font(.title2)
+              Image(systemName: appState.isFavoritesSortedAscending ? "arrow.up" : "arrow.down")
+            }
           }
-          .padding()
-          .background(Capsule().fill(Color(.systemGray4)))
+          .padding(.vertical, 5)
+          Spacer()
         }
-        .padding()
+        .listRowSeparator(Visibility.hidden)
         
-        List {
-          ForEach(
-            sortedFavorites(),
-            id: \.self
-          ) { favorite in
-            Button(action: {
-              onSelect(favorite)
-            }) {
-              HStack {
-                Text("\(favorite.conversionType.id)")
-                Spacer()
-                Text("\(favorite.inputUnit) → \(favorite.outputUnit)")
-              }
+        ForEach(
+          sortedFavorites(),
+          id: \.self
+        ) { favorite in
+          Button(action: {
+            onSelect(favorite)
+          }) {
+            HStack {
+              Text("\(favorite.conversionType.id)")
+              Spacer()
+              Text("\(favorite.inputUnit) → \(favorite.outputUnit)")
             }
           }
         }
@@ -59,15 +60,15 @@ struct FavoritesPicker: View {
   private func sortedFavorites() -> [FavoriteConversion] {
     appState.favoriteConversions.sorted {
       if $0.conversionType.id != $1.conversionType.id {
-        return isAscending
+        return appState.isFavoritesSortedAscending
         ? $0.conversionType.id < $1.conversionType.id
         : $0.conversionType.id > $1.conversionType.id
       } else if $0.inputUnit != $1.inputUnit {
-        return isAscending
+        return appState.isFavoritesSortedAscending
         ? $0.inputUnit < $1.inputUnit
         : $0.inputUnit > $1.inputUnit
       } else {
-        return isAscending
+        return appState.isFavoritesSortedAscending
         ? $0.outputUnit < $1.outputUnit
         : $0.outputUnit > $1.outputUnit
       }

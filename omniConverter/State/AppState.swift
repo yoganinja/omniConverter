@@ -24,7 +24,8 @@ class AppState: ObservableObject {
       saveData()
     }
   }
-//  @Published var isFavorite: Bool = false
+  @AppStorage("isFavoritesSortedAscending") var isFavoritesSortedAscendingStored: Bool = true
+  @Published var isFavoritesSortedAscending: Bool = true
   
   //MARK: Private properties
   private let persistenceKey = "lastUsedUnits"
@@ -38,10 +39,15 @@ class AppState: ObservableObject {
     
     // Initialize Published properties with the stored values
     selectedConversionType = selectedConversionTypeStored
+    isFavoritesSortedAscending = isFavoritesSortedAscendingStored
     
     // Observe changes to Published properties and save them to UserDefaults
     $selectedConversionType
       .sink { [weak self] newValue in self?.selectedConversionTypeStored = newValue }
+      .store(in: &cancellables)
+    
+    $isFavoritesSortedAscending
+      .sink { [weak self] newValue in self?.isFavoritesSortedAscendingStored = newValue }
       .store(in: &cancellables)
   }
   
