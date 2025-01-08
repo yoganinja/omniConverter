@@ -13,30 +13,30 @@ public struct ValuePicker<SelectionValue: Hashable, TitleContent: View, Content:
   private let title: TitleContent
 //  private let title: LocalizedStringKey?
   private let selection: Binding<SelectionValue>
-  private let isConversionTypeSelectorOpen: Binding<Bool>
+  private let isSelectorOpen: Binding<Bool>
   private let content: Content
   
   public init(
     @ViewBuilder title: () -> TitleContent,
 //    _ title: LocalizedStringKey? = nil,
     selection: Binding<SelectionValue>,
-    isConversionTypeSelectorOpen: Binding<Bool>,
+    isSelectorOpen: Binding<Bool>,
     @ViewBuilder content: () -> Content
   ) {
     self.title = title()
     self.selection = selection
-    self.isConversionTypeSelectorOpen = isConversionTypeSelectorOpen
+    self.isSelectorOpen = isSelectorOpen
     self.content = content()
   }
   
   public var body: some View {
     NavigationLink {
       List {
-        _VariadicView.Tree(ValuePickerOptions(selectedValue: selection, isConversionTypeSelectorOpen: isConversionTypeSelectorOpen)) {
+        _VariadicView.Tree(ValuePickerOptions(selectedValue: selection, isSelectorOpen: isSelectorOpen)) {
           content
         }
       }
-      .onAppear(perform: { isConversionTypeSelectorOpen.wrappedValue = true })
+      .onAppear(perform: { isSelectorOpen.wrappedValue = true })
 //      .navigationTitle(title ?? "")
 #if !os(macOS)
       .navigationBarTitleDisplayMode(.inline)
@@ -58,12 +58,12 @@ public struct ValuePicker<SelectionValue: Hashable, TitleContent: View, Content:
 
 private struct ValuePickerOptions<Value: Hashable>: _VariadicView.MultiViewRoot {
   private let selectedValue: Binding<Value>
-  private let isConversionTypeSelectorOpen: Binding<Bool>
+  private let isSelectorOpen: Binding<Bool>
   
   init(selectedValue: Binding<Value>,
-       isConversionTypeSelectorOpen: Binding<Bool>) {
+       isSelectorOpen: Binding<Bool>) {
     self.selectedValue = selectedValue
-    self.isConversionTypeSelectorOpen = isConversionTypeSelectorOpen
+    self.isSelectorOpen = isSelectorOpen
   }
   
   @ViewBuilder
@@ -73,13 +73,13 @@ private struct ValuePickerOptions<Value: Hashable>: _VariadicView.MultiViewRoot 
         ValuePickerOption(
           selectedValue: selectedValue,
           value: child[CustomTagValueTraitKey<Value>.self],
-          isConversionTypeSelectorOpen: isConversionTypeSelectorOpen
+          isSelectorOpen: isSelectorOpen
         ) {
           child
         }
       }
     }
-    .navigationBarBackButtonHidden(true)
+//    .navigationBarBackButtonHidden(true)
   }
 }
 
@@ -88,13 +88,13 @@ private struct ValuePickerOption<Content: View, Value: Hashable>: View {
   
   private let selectedValue: Binding<Value>
   private let value: Value?
-  private let isConversionTypeSelectorOpen: Binding<Bool>
+  private let isSelectorOpen: Binding<Bool>
   private let content: Content
   
   init(
     selectedValue: Binding<Value>,
     value: CustomTagValueTraitKey<Value>.Value,
-    isConversionTypeSelectorOpen: Binding<Bool>,
+    isSelectorOpen: Binding<Bool>,
     @ViewBuilder _ content: () -> Content
   ) {
     self.selectedValue = selectedValue
@@ -103,7 +103,7 @@ private struct ValuePickerOption<Content: View, Value: Hashable>: View {
     } else {
       nil
     }
-    self.isConversionTypeSelectorOpen = isConversionTypeSelectorOpen
+    self.isSelectorOpen = isSelectorOpen
     self.content = content()
   }
   
@@ -112,8 +112,8 @@ private struct ValuePickerOption<Content: View, Value: Hashable>: View {
       action: {
         if let value {
           selectedValue.wrappedValue = value
-          isConversionTypeSelectorOpen.wrappedValue = false
         }
+        isSelectorOpen.wrappedValue = false
         dismiss()
       },
       label: {
@@ -169,7 +169,7 @@ private struct PreviewContent: View {
   var body: some View {
     NavigationStack {
       List {
-//        ValuePicker("Name", selection: $selection, isConversionTypeSelectorOpen: false) {
+//        ValuePicker("Name", selection: $selection, isSelectorOpen: false) {
 //          ForEach(["John", "Jean", "Juan"], id: \.self) { name in
 //            Text(verbatim: name)
 //              .pickerTag(name)
