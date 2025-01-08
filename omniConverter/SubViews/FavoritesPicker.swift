@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct FavoritesPicker: View {
-  @ObservedObject var appState: AppState
+  @EnvironmentObject var appState: AppState
+  
   var onSelect: (FavoriteConversion?) -> Void
   
   var body: some View {
