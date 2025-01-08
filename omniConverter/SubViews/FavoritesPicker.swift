@@ -29,6 +29,8 @@ struct FavoritesPicker: View {
           .padding(.vertical, 5)
           Spacer()
         }
+        .frame(maxWidth: .infinity)
+        .background(Capsule().fill(Color(.systemGray6)))
         .listRowSeparator(Visibility.hidden)
         
         ForEach(
