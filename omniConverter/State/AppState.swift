@@ -8,13 +8,8 @@
 import Combine
 import SwiftUI
 
-struct InOutUnits: Codable {
-  var inputUnit: String
-  var outputUnit: String
-  var inputValue: String
-}
-
 class AppState: ObservableObject {
+  //MARK: Published properties
   @AppStorage("selectedConversionType") var selectedConversionTypeStored: ConversionType = .length
   @Published var selectedConversionType: ConversionType = .length
   @Published var selectedInputUnit: String = "Inches"
@@ -24,12 +19,22 @@ class AppState: ObservableObject {
       saveData()
     }
   }
+  @Published var favoriteConversions: [FavoriteConversion] = [] {
+    didSet {
+      saveData()
+    }
+  }
+//  @Published var isFavorite: Bool = false
   
+  //MARK: Private properties
   private let persistenceKey = "lastUsedUnits"
+  private let persistedFavoritesKey = "favoriteConversions"
   private var cancellables = Set<AnyCancellable>()
   
+  //MARK: Constructors
   init() {
     loadData()
+    loadFavorites()
     
     // Initialize Published properties with the stored values
     selectedConversionType = selectedConversionTypeStored
@@ -40,6 +45,7 @@ class AppState: ObservableObject {
       .store(in: &cancellables)
   }
   
+  //MARK: Persistence
   // Save data to UserDefaults
   private func saveData() {
     do {
@@ -59,6 +65,64 @@ class AppState: ObservableObject {
       lastUsed = try decoder.decode([ConversionType: InOutUnits].self, from: data)
     } catch {
       print("Failed to load data: \(error)")
+    }
+  }
+  
+  //MARK: Favorites
+  func addFavorite() {
+    let newFavorite = FavoriteConversion(conversionType: selectedConversionType, inputUnit: selectedInputUnit, outputUnit: selectedOutputUnit)
+    if !favoriteConversions.contains(newFavorite) {
+      favoriteConversions.append(newFavorite)
+    }
+    saveFavorites()
+  }
+  
+  func removeFavorite() {
+    let notFavorite = FavoriteConversion(conversionType: selectedConversionType, inputUnit: selectedInputUnit, outputUnit: selectedOutputUnit)
+    removeFavorite(favoriteConversion: notFavorite)
+  }
+  
+  func removeFavorite(favoriteConversion: FavoriteConversion) {
+    favoriteConversions.removeAll { $0 == favoriteConversion }
+    saveFavorites()
+  }
+  
+  var isFavorite: Bool {
+    let newFavorite = FavoriteConversion(conversionType: selectedConversionType, inputUnit: selectedInputUnit, outputUnit: selectedOutputUnit)
+    return favoriteConversions.contains(newFavorite)
+  }
+  
+//  func addFavorite() -> UUID {
+//    let newFavorite = FavoriteConversion(conversionType: selectedConversionType, inputUnit: selectedInputUnit, outputUnit: selectedOutputUnit)
+//    let newId = UUID()
+//    favoriteConversions[newId] = newFavorite
+//    saveFavorites()
+//    
+//    return newId
+//  }
+//  
+//  func removeFavorite(id: UUID) {
+//    if favoriteConversions[id] != nil {
+//      favoriteConversions.removeValue(forKey: id)
+//      saveFavorites()
+//    }
+//  }
+  
+  private func saveFavorites() {
+    do {
+      let data = try JSONEncoder().encode(favoriteConversions)
+      UserDefaults.standard.set(data, forKey: persistedFavoritesKey)
+    } catch {
+      print("Failed to save favorites: \(error)")
+    }
+  }
+  
+  private func loadFavorites() {
+    guard let data = UserDefaults.standard.data(forKey: persistedFavoritesKey) else { return }
+    do {
+      favoriteConversions = try JSONDecoder().decode([FavoriteConversion].self, from: data)
+    } catch {
+      print("Failed to load favorites: \(error)")
     }
   }
 }
