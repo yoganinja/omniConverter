@@ -248,6 +248,7 @@ struct MainView: View {
                 appState.selectedConversionType = favorite.conversionType
                 appState.selectedInputUnit = favorite.inputUnit
                 appState.selectedOutputUnit = favorite.outputUnit
+                vm.getLastUsedValue()
               }
               // Dismiss the sheet
               isFavoritesOpen = false

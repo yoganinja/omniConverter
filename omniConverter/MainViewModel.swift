@@ -31,17 +31,13 @@ extension MainViewModel {
     if let lastUsed = appState.lastUsed[appState.selectedConversionType] {
       appState.selectedInputUnit = lastUsed.inputUnit
       appState.selectedOutputUnit = lastUsed.outputUnit
-      rawInputValue = lastUsed.inputValue
-      inputValue = formatInputValue(rawInputValue)
     } else {
       appState.selectedInputUnit = appState.selectedConversionType.unitTypeNames.first ?? ""
       appState.selectedOutputUnit = appState.selectedConversionType.unitTypeNames.dropFirst().first
       ?? appState.selectedConversionType.unitTypeNames.first ?? ""
-      rawInputValue = "0"
-      inputValue = formatInputValue(rawInputValue)
     }
     
-    calculateOutput()
+    getLastUsedValue()
   }
   
   func updateInputUnit() {
@@ -54,6 +50,17 @@ extension MainViewModel {
   func updateOutputUnit() {
     appState.lastUsed[appState.selectedConversionType] =
     InOutUnits(inputUnit: appState.selectedInputUnit, outputUnit: appState.selectedOutputUnit, inputValue: rawInputValue)
+    
+    calculateOutput()
+  }
+  
+  func getLastUsedValue() {
+    if let lastUsed = appState.lastUsed[appState.selectedConversionType] {
+      rawInputValue = lastUsed.inputValue
+    } else {
+      rawInputValue = "0"
+    }
+    inputValue = formatInputValue(rawInputValue)
     
     calculateOutput()
   }
