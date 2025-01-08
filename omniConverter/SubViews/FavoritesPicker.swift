@@ -15,7 +15,15 @@ struct FavoritesPicker: View {
   var body: some View {
     NavigationView {
       List {
-        ForEach(appState.favoriteConversions, id: \.self) { favorite in
+        ForEach(appState.favoriteConversions.sorted(by: {
+          if $0.conversionType.id != $1.conversionType.id {
+            return $0.conversionType.id < $1.conversionType.id
+          } else if $0.inputUnit != $1.inputUnit {
+            return $0.inputUnit < $1.inputUnit
+          } else {
+            return $0.outputUnit < $1.outputUnit
+          }
+        }), id: \.self) { favorite in
           Button(action: {
             onSelect(favorite)
           }) {
