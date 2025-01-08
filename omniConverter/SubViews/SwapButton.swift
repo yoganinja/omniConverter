@@ -14,7 +14,7 @@ struct SwapButton: View {
     Button(action: onSwap) {
       ZStack {
         Circle()
-          .fill(Color.gray.opacity(0.3))
+          .fill(Color(.systemGray4).opacity(0.5))
           .frame(width: 50, height: 50)
         Image(systemName: "arrow.up.arrow.down")
           .resizable()
@@ -23,25 +23,3 @@ struct SwapButton: View {
     }
   }
 }
-
-//            Button(action: {
-//              // Swap input and output units
-//              let tempUnit = vm.selectedInputUnit
-//              vm.selectedInputUnit = vm.selectedOutputUnit
-//              vm.selectedOutputUnit = tempUnit
-//
-//              let tempValue = vm.inputValue
-//              vm.inputValue = vm.outputValue
-//              vm.outputValue = tempValue
-//            }) {
-//              ZStack {
-//                Circle()
-//                  .fill(Color.gray.opacity(0.3)) // Background color for the circle
-//                  .frame(width: 50, height: 50) // Size of the circle
-//
-//                Image(systemName: "arrow.up.arrow.down")
-//                  .resizable()
-//                  .frame(width: 24, height: 24)
-//                  .padding()
-//              }
-//            }
