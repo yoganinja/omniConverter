@@ -210,6 +210,7 @@ struct MainView: View {
         //MARK: Favorites
         FavoritesView(vm: vm, isSelectorOpen: $isFavoritesOpen)
           .environmentObject(appState)
+        Spacer()
         
         //MARK: Keyboard
         NumericKeyboard { key in
@@ -217,7 +218,7 @@ struct MainView: View {
         }
         Spacer()
       }
-      .background(Color.red.opacity(0.1).edgesIgnoringSafeArea(.all))
+      .background(Color.brown.opacity(0.1).edgesIgnoringSafeArea(.all))
       .onAppear {
         vm.updateConversionType()
       }
