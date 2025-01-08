@@ -208,45 +208,8 @@ struct MainView: View {
         }
         
         //MARK: Favorites
-        HStack {
-          Spacer()
-          Button(action: {
-            if appState.isFavorite {
-              appState.removeFavorite()
-            } else {
-              appState.addFavorite()
-            }
-          }) {
-            HStack {
-              Image(systemName: appState.isFavorite ? "heart.fill" : "heart")
-                .foregroundColor(appState.isFavorite ? .red : .blue)
-            }
-            .padding(10)
-            .background(Capsule().fill(Color(.systemGray4)))
-          }
-          .buttonStyle(PlainButtonStyle())
-          
-          Button("Favorites") {
-            isFavoritesOpen = true
-          }
-          .padding(10)
-          .background(Capsule().fill(Color(.systemGray4)))
-        }
-        .padding(.horizontal)
-        .sheet(isPresented: $isFavoritesOpen) {
-          FavoritesPicker(
-            onSelect: { selection in
-              if let favorite = selection {
-                appState.selectedConversionType = favorite.conversionType
-                appState.selectedInputUnit = favorite.inputUnit
-                appState.selectedOutputUnit = favorite.outputUnit
-                vm.getLastUsedValue()
-              }
-              isFavoritesOpen = false
-            }
-          )
+        FavoritesView(vm: vm, isSelectorOpen: $isFavoritesOpen)
           .environmentObject(appState)
-        }
         
         //MARK: Keyboard
         NumericKeyboard { key in
