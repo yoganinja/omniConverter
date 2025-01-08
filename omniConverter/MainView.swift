@@ -219,38 +219,29 @@ struct MainView: View {
           }) {
             HStack {
               Image(systemName: appState.isFavorite ? "heart.fill" : "heart")
-                .foregroundColor(appState.isFavorite ? .red : .gray)
+                .foregroundColor(appState.isFavorite ? .red : .blue)
             }
             .padding(10)
             .background(Capsule().fill(Color(.systemGray4)))
           }
           .buttonStyle(PlainButtonStyle())
-          //          .padding()
           
           Button("Favorites") {
             isFavoritesOpen = true
           }
           .padding(10)
           .background(Capsule().fill(Color(.systemGray4)))
-//          .foregroundColor(.white)
         }
-        //        .frame(maxWidth: .infinity)
-        //        .background(Color.white)
-        //        .cornerRadius(8)
-        //        .shadow(radius: 2)
         .padding(.horizontal)
-        //        .padding(.top)
         .sheet(isPresented: $isFavoritesOpen) {
           FavoritesPicker(
             onSelect: { selection in
               if let favorite = selection {
-                // Update the selection when a favorite is tapped
                 appState.selectedConversionType = favorite.conversionType
                 appState.selectedInputUnit = favorite.inputUnit
                 appState.selectedOutputUnit = favorite.outputUnit
                 vm.getLastUsedValue()
               }
-              // Dismiss the sheet
               isFavoritesOpen = false
             }
           )
