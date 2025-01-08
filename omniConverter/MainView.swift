@@ -48,10 +48,13 @@ struct MainView: View {
   @EnvironmentObject var appState: AppState
   @StateObject var vm: MainViewModel
   
+  @State var favCon: FavoriteConversion? = FavoriteConversion(conversionType: .length, inputUnit: "Meters", outputUnit: "Feet")
+  @State var isFavoritesOpen: Bool = false
+  
   var body: some View {
     NavigationStack {
       VStack {
-        // Conversion Type Section
+        //MARK: Conversion Type Section
         HStack {
           ValuePicker(
             title: {
@@ -73,7 +76,7 @@ struct MainView: View {
               .padding(.vertical, 8)
             },
             selection: $appState.selectedConversionType,
-            isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
+            isSelectorOpen: $vm.isConversionTypeSelectorOpen
           ) {
             ForEach(ConversionType.allCases, id: \.self) { name in
               Text(verbatim: name.id)
@@ -91,10 +94,12 @@ struct MainView: View {
         .shadow(radius: 2)
         .padding(.horizontal)
         .padding(.top)
-       
+        
+        //MARK: Units Section
         ZStack {
           VStack {
-            // Input Section
+            
+            //MARK: Input Section
             HStack {
               ValuePicker(
                 title: {
@@ -123,7 +128,7 @@ struct MainView: View {
                   }
                 },
                 selection: $appState.selectedInputUnit,
-                isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
+                isSelectorOpen: $vm.isConversionTypeSelectorOpen
               ) {
                 ForEach(appState.selectedConversionType.unitTypeNames, id: \.self) { name in
                   Text(verbatim: "\(name) (\(name.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
@@ -142,8 +147,7 @@ struct MainView: View {
             .padding(.horizontal)
             .padding(.top)
             
-            
-            // Output Section
+            //MARK: Output Section
             HStack {
               ValuePicker(
                 title: {
@@ -161,10 +165,10 @@ struct MainView: View {
                     
                     HStack(alignment: .lastTextBaseline) {
                       Text(vm.outputValue)
-                          .font(.largeTitle)
-                          .minimumScaleFactor(0.5) // Adjust this factor as needed
-                          .lineLimit(1) // Ensure single-line display
-                          .padding(.vertical, 4)
+                        .font(.largeTitle)
+                        .minimumScaleFactor(0.5) // Adjust this factor as needed
+                        .lineLimit(1) // Ensure single-line display
+                        .padding(.vertical, 4)
                       Text("\(appState.selectedOutputUnit.unit(for: appState.selectedConversionType)?.symbol ?? "")")
                         .font(.subheadline)
                     }
@@ -172,7 +176,7 @@ struct MainView: View {
                   }
                 },
                 selection: $appState.selectedOutputUnit,
-                isConversionTypeSelectorOpen: $vm.isConversionTypeSelectorOpen
+                isSelectorOpen: $vm.isConversionTypeSelectorOpen
               ) {
                 ForEach(appState.selectedConversionType.unitTypeNames, id: \.self) { name in
                   Text(verbatim: "\(name) (\(name.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
@@ -192,6 +196,7 @@ struct MainView: View {
             .padding(.top)
           }
           
+          //MARK: Unit Switcher
           HStack {
             Spacer()
             SwapButton {
@@ -201,7 +206,8 @@ struct MainView: View {
           }
           .padding()
         }
-        Spacer()
+        
+        //MARK: Keyboard
         NumericKeyboard { key in
           vm.handleKeyPress(key)
         }
