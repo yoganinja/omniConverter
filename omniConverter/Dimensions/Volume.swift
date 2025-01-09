@@ -10,7 +10,7 @@ import Foundation
 
 enum Volume: String, CaseIterable, Identifiable {
   case acreFeet = "Acre Feet"
-  case bananas = "Bananas"
+  case cubicBananas = "Cubic Bananas"
   case bushels = "Bushels"
   case centiliters = "Centiliters"
   case cubicCentimeters = "Cubic Centimeters"
@@ -79,8 +79,8 @@ extension UnitVolume {
       switch type {
       case .acreFeet:
         dict[type.rawValue] = .acreFeet
-      case .bananas:
-        dict[type.rawValue] = .bananas
+      case .cubicBananas:
+        dict[type.rawValue] = .cubicBananas
       case .bushels:
         dict[type.rawValue] = .bushels
       case .centiliters:
@@ -171,10 +171,10 @@ extension UnitVolume {
       converter: UnitConverterLinear(coefficient: 8.80976754172))
   }
   
-  static var bananas: UnitVolume {
+  static var cubicBananas: UnitVolume {
     // 1 banana = 0.1862 liters
     return UnitVolume(
-      symbol: "bnna",
+      symbol: "bnna\u{00B3}",
       converter: UnitConverterLinear(coefficient: 0.1862))
   }
 }

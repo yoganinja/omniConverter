@@ -9,7 +9,7 @@
 import Foundation
 
 enum Mass: String, CaseIterable, Identifiable {
-  case bananas = "Bananas"
+  case bananas = "Banana Weights"
   case carats = "Carats"
   case centigrams = "Centigrams"
   case decigrams = "Decigrams"
@@ -131,7 +131,7 @@ extension UnitMass {
   static var bananas: UnitMass {
     // 1 banana = 0.175 kilograms
     return UnitMass(
-      symbol: "bnna",
+      symbol: "bnnawt",
       converter: UnitConverterLinear(coefficient: 0.175))
   }
 }
