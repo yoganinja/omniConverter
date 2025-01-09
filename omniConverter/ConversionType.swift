@@ -204,6 +204,61 @@ extension ConversionType {
       return Volume.allCases.names
     }
   }
+  
+  var unitTypeSymbols: [String] {
+    switch self {
+    case .acceleration:
+      return Acceleration.allCases.compactMap { $0.symbol }
+    case .angle:
+      return Angle.allCases.compactMap { $0.symbol }
+    case .area:
+      return Area.allCases.compactMap { $0.symbol }
+    case .concentrationMass:
+      return ConcentrationMass.allCases.compactMap { $0.symbol }
+    case .density:
+      return Density.allCases.compactMap { $0.symbol }
+    case .dispersion:
+      return Dispersion.allCases.compactMap { $0.symbol }
+    case .duration:
+      return Duration.allCases.compactMap { $0.symbol }
+    case .electricCharge:
+      return ElectricCharge.allCases.compactMap { $0.symbol }
+    case .electricCurrent:
+      return ElectricCurrent.allCases.compactMap { $0.symbol }
+    case .electricPotentialDifference:
+      return ElectricPotentialDifference.allCases.compactMap { $0.symbol }
+    case .electricResistance:
+      return ElectricResistance.allCases.compactMap { $0.symbol }
+    case .energy:
+      return Energy.allCases.compactMap { $0.symbol }
+    case .frequency:
+      return Frequency.allCases.compactMap { $0.symbol }
+    case .fuelEfficiency:
+      return FuelEfficiency.allCases.compactMap { $0.symbol }
+    case .illuminance:
+      return Illuminance.allCases.compactMap { $0.symbol }
+    case .informationStorage:
+      return InformationStorage.allCases.compactMap { $0.symbol }
+    case .length:
+      return Length.allCases.compactMap { $0.symbol }
+    case .mass:
+      return Mass.allCases.compactMap { $0.symbol }
+    case .power:
+      return Power.allCases.compactMap { $0.symbol }
+    case .pressure:
+      return Pressure.allCases.compactMap { $0.symbol }
+    case .radiationDose:
+      return RadiationDose.allCases.compactMap { $0.symbol }
+    case .radioactivity:
+      return Radioactivity.allCases.compactMap { $0.symbol }
+    case .speed:
+      return Speed.allCases.compactMap { $0.symbol }
+    case .temperature:
+      return Temperature.allCases.compactMap { $0.symbol }
+    case .volume:
+      return Volume.allCases.compactMap { $0.symbol }
+    }
+  }
 }
 
 extension String {

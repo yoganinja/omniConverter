@@ -7,43 +7,6 @@
 
 import SwiftUI
 
-//struct PlayView: View {
-//  let types = ConversionType.allCases
-//  let unitNames = ConversionType.length.unitTypeNames
-////  let units = Length.allUnitCases
-//  @State private var selectedConversionTypeUnits: [Unit]// = ConversionType.length.allUnitCases
-//  
-//  var body: some View {
-////    ForEach(types, id: \.self) { type in
-////      List {
-////        ForEach(type.unitTypeNames) { unit in
-////          Text("\(unit.id)")
-////            .padding()
-////        }
-////      }
-////    }
-//    
-//    ForEach(types, id: \.self) { type in
-////      Text(type.id.unit?.symbol ?? "")
-////      Text(type.unitType.debugDescription())
-//      
-//      List {
-//        ForEach(type.unitTypeNames, id: \.self) { unit in
-//          Text(unit)
-//            .padding()
-//        }
-//      }
-//    }
-//    
-//    List {
-//      ForEach(unitNames, id: \.self) { unit in
-//        Text(unit)
-//          .padding()
-//      }
-//    }
-//  }
-//}
-
 struct MainView: View {
   @EnvironmentObject var appState: AppState
   @StateObject var vm: MainViewModel
@@ -234,8 +197,8 @@ struct MainView: View {
                 if let suggestion = suggestion {
                   // Update AppState with the selected conversion
                   appState.selectedConversionType = suggestion.conversionType
-                  appState.selectedInputUnit = suggestion.unit
-                  appState.selectedOutputUnit = defaultOutputUnit(for: suggestion.conversionType, inputUnit: suggestion.unit)
+                  appState.selectedInputUnit = suggestion.unitName
+                  appState.selectedOutputUnit = defaultOutputUnit(for: suggestion.conversionType, inputUnit: suggestion.unitName)
                   vm.getLastUsedValue()
                 }
                 isSearchOpen = false // Close the sheet
@@ -260,24 +223,6 @@ struct MainView: View {
       .background(Color.brown.opacity(0.1).edgesIgnoringSafeArea(.all))
       .onAppear {
         vm.updateConversionType()
-      }
-    }
-  }
-  
-  // Filter Suggestions Based on Search Text
-  private func filterSuggestions() {
-    guard !searchText.isEmpty else {
-      suggestions = []
-      return
-    }
-    
-    // Flatten all unit names with their corresponding ConversionType
-    suggestions = ConversionType.allCases.flatMap { conversionType in
-      conversionType.unitTypeNames.filter { unitName in
-        unitName.localizedCaseInsensitiveContains(searchText)
-      }
-      .map { matchedUnit in
-        (conversionType: conversionType, unit: matchedUnit)
       }
     }
   }

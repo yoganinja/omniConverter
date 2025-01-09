@@ -7,7 +7,12 @@
 
 import SwiftUI
 
-typealias Suggestion = (conversionType: ConversionType, unit: String)
+//typealias Suggestion = (conversionType: ConversionType, unit: String)
+typealias Suggestion = (
+  conversionType: ConversionType,
+  displayValue: String, // For showing in the UI
+  unitName: String // For returning the original unit name
+)
 
 struct SearchSheet: View {
   @Binding var searchText: String
@@ -18,14 +23,14 @@ struct SearchSheet: View {
   var body: some View {
     NavigationView {
       List {
-        ForEach(suggestions, id: \.unit) { suggestion in
+        ForEach(suggestions, id: \.unitName) { suggestion in
           Button(action: {
-            onSelect(suggestion)
+            onSelect((conversionType: suggestion.conversionType, displayValue: suggestion.displayValue, unitName: suggestion.unitName))
           }) {
             HStack {
               Text(suggestion.conversionType.rawValue)
               Spacer()
-              Text(suggestion.unit)
+              Text(suggestion.displayValue) // Show the combined value in the UI
             }
           }
         }
@@ -33,6 +38,7 @@ struct SearchSheet: View {
       .listStyle(PlainListStyle())
       .navigationTitle("Search Units")
       .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
+      .textInputAutocapitalization(.never)
       .onChange(of: searchText) { _ in
         filterSuggestions()
       }
@@ -46,19 +52,24 @@ struct SearchSheet: View {
     }
   }
   
-  // Filter Suggestions
   private func filterSuggestions() {
     guard !searchText.isEmpty else {
       suggestions = []
       return
     }
     
+    // Flatten all unit names and symbols combined with their corresponding ConversionType
     suggestions = ConversionType.allCases.flatMap { conversionType in
-      conversionType.unitTypeNames.filter { unitName in
-        unitName.localizedCaseInsensitiveContains(searchText)
+      // Combine names and symbols for display
+      zip(conversionType.unitTypeNames, conversionType.unitTypeSymbols).map { name, symbol in
+        (
+          conversionType: conversionType,
+          displayValue: "\(name) (\(symbol))", // For showing in the UI
+          unitName: name // For internal use
+        )
       }
-      .map { matchedUnit in
-        (conversionType: conversionType, unit: matchedUnit)
+      .filter { suggestion in
+        suggestion.displayValue.localizedCaseInsensitiveContains(searchText)
       }
     }
   }
