@@ -48,8 +48,11 @@ struct MainView: View {
   @EnvironmentObject var appState: AppState
   @StateObject var vm: MainViewModel
   
-  @State var favCon: FavoriteConversion? = FavoriteConversion(conversionType: .length, inputUnit: "Meters", outputUnit: "Feet")
   @State var isFavoritesOpen: Bool = false
+  
+  @State private var searchText: String = ""
+  @State private var suggestions: [Suggestion] = []
+  @State private var isSearchOpen: Bool = false
   
   var body: some View {
     NavigationStack {
@@ -207,9 +210,45 @@ struct MainView: View {
           .padding()
         }
         
-        //MARK: Favorites
-        FavoritesView(vm: vm, isSelectorOpen: $isFavoritesOpen)
-          .environmentObject(appState)
+        HStack {
+          //MARK: Search
+          VStack {
+            Button(action: {
+              isSearchOpen = true
+            }) {
+              HStack {
+                Image(systemName: "magnifyingglass")
+                Text("Search")
+                  .font(.headline)
+              }
+              .padding(10)
+              .background(Capsule().fill(Color(.systemGray4)))
+            }
+          }
+          .padding(.horizontal)
+          .sheet(isPresented: $isSearchOpen) {
+            SearchSheet(
+              searchText: $searchText,
+              suggestions: $suggestions,
+              onSelect: { suggestion in
+                if let suggestion = suggestion {
+                  // Update AppState with the selected conversion
+                  appState.selectedConversionType = suggestion.conversionType
+                  appState.selectedInputUnit = suggestion.unit
+                  appState.selectedOutputUnit = defaultOutputUnit(for: suggestion.conversionType, inputUnit: suggestion.unit)
+                  vm.getLastUsedValue()
+                }
+                isSearchOpen = false // Close the sheet
+              }
+            )
+          }
+          
+          Spacer()
+          
+          //MARK: Favorites
+          FavoritesView(vm: vm, isSelectorOpen: $isFavoritesOpen)
+            .environmentObject(appState)
+        }
         Spacer()
         
         //MARK: Keyboard
@@ -223,6 +262,32 @@ struct MainView: View {
         vm.updateConversionType()
       }
     }
+  }
+  
+  // Filter Suggestions Based on Search Text
+  private func filterSuggestions() {
+    guard !searchText.isEmpty else {
+      suggestions = []
+      return
+    }
+    
+    // Flatten all unit names with their corresponding ConversionType
+    suggestions = ConversionType.allCases.flatMap { conversionType in
+      conversionType.unitTypeNames.filter { unitName in
+        unitName.localizedCaseInsensitiveContains(searchText)
+      }
+      .map { matchedUnit in
+        (conversionType: conversionType, unit: matchedUnit)
+      }
+    }
+  }
+  
+  private func defaultOutputUnit(for conversionType: ConversionType, inputUnit: String) -> String {
+    let units = conversionType.unitTypeNames
+    guard units.count > 0 else {
+      return inputUnit
+    }
+    return units.first(where: { $0 != inputUnit }) ?? inputUnit
   }
 }
 
