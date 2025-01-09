@@ -20,7 +20,6 @@ struct FavoritesView: View {
   
   var body: some View {
     HStack {
-      Spacer()
       Button(action: {
         if appState.isFavorite {
           appState.removeFavorite()
@@ -37,11 +36,16 @@ struct FavoritesView: View {
       }
       .buttonStyle(PlainButtonStyle())
       
-      Button("Favorites") {
+      Button(action: {
         isSelectorOpen.wrappedValue = true
+      }) {
+        HStack {
+          Text("Favorites")
+            .font(.headline)
+        }
+        .padding(10)
+        .background(Capsule().fill(Color(.systemGray4)))
       }
-      .padding(10)
-      .background(Capsule().fill(Color(.systemGray4)))
     }
     .padding(.horizontal)
     .sheet(isPresented: isSelectorOpen) {
