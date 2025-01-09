@@ -63,6 +63,7 @@ enum Radioactivity: String, CaseIterable, Identifiable {
   case terabecquerel = "Terabecquerel"
   
   var id: String { self.rawValue }
+  var symbol: String { Radioactivity.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitRadioactivity? {

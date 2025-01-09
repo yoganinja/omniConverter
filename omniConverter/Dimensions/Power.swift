@@ -22,6 +22,7 @@ enum Power: String, CaseIterable, Identifiable {
   case watts = "Watts"
   
   var id: String { self.rawValue }
+  var symbol: String { Power.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitPower? {

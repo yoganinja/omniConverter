@@ -16,6 +16,7 @@ enum ElectricPotentialDifference: String, CaseIterable, Identifiable {
   case volts = "Volts"
   
   var id: String { self.rawValue }
+  var symbol: String { ElectricPotentialDifference.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitElectricPotentialDifference? {

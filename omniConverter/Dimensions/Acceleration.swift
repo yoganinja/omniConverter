@@ -27,6 +27,7 @@ enum Acceleration: String, CaseIterable, Identifiable {
 //  case yardsPerSecondSquared = "Yards per Second Squared"
   
   var id: String { self.rawValue }
+  var symbol: String { Acceleration.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitAcceleration? {

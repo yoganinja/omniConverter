@@ -33,6 +33,7 @@ enum Area: String, CaseIterable, Identifiable {
   case cho = "Chō"
   
   var id: String { self.rawValue }
+  var symbol: String { Area.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitArea? {

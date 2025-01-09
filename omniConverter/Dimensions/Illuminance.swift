@@ -22,6 +22,7 @@ enum Illuminance: String, CaseIterable, Identifiable {
 //  case lumenPerInch = "Lumen per Inch"
   
   var id: String { self.rawValue }
+  var symbol: String { Illuminance.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitIlluminance? {

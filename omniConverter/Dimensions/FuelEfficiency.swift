@@ -14,6 +14,7 @@ enum FuelEfficiency: String, CaseIterable, Identifiable {
   case milesPerImperialGallon = "Miles per Imperial Gallon"
   
   var id: String { self.rawValue }
+  var symbol: String { FuelEfficiency.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitFuelEfficiency? {

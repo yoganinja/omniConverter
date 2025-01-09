@@ -20,6 +20,7 @@ enum Frequency: String, CaseIterable, Identifiable {
   case framesPerSecond = "Frames per Second"
   
   var id: String { self.rawValue }
+  var symbol: String { Frequency.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitFrequency? {

@@ -14,6 +14,7 @@ enum Temperature: String, CaseIterable, Identifiable {
   case kelvin = "Kelvin"
   
   var id: String { self.rawValue }
+  var symbol: String { Temperature.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitTemperature? {

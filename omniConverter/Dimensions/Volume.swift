@@ -44,6 +44,7 @@ enum Volume: String, CaseIterable, Identifiable {
   case teaspoons = "Teaspoons"
   
   var id: String { self.rawValue }
+  var symbol: String { Volume.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitVolume? {

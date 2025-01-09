@@ -14,6 +14,7 @@ enum Density: String, CaseIterable, Identifiable {
   case ouncesPerFluidOunce = "Ounces per Fluid Ounce"
   
   var id: String { self.rawValue }
+  var symbol: String { Density.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitDensity? {

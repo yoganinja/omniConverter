@@ -21,6 +21,7 @@ enum Pressure: String, CaseIterable, Identifiable {
   case poundsForcePerSquareInch = "Pounds Force per Square Inch"
   
   var id: String { self.rawValue }
+  var symbol: String { Pressure.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitPressure? {

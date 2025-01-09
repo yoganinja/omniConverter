@@ -18,6 +18,7 @@ enum Duration: String, CaseIterable, Identifiable {
   case picoseconds = "Picoseconds"
   
   var id: String { self.rawValue }
+  var symbol: String { Duration.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitDuration? {

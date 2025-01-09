@@ -17,6 +17,7 @@ enum ElectricCharge: String, CaseIterable, Identifiable {
   case milliampereHours = "Milliampere Hours"
   
   var id: String { self.rawValue }
+  var symbol: String { ElectricCharge.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitElectricCharge? {

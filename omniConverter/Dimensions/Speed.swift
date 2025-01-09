@@ -15,6 +15,7 @@ enum Speed: String, CaseIterable, Identifiable {
   case milesPerHour = "Miles per Hour"
   
   var id: String { self.rawValue }
+  var symbol: String { Speed.unit(from: self.rawValue)?.symbol ?? "" }
   
   /// Type-safe way of getting the unit from a string name
   static func unit(from name: String) -> UnitSpeed? {
