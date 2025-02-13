@@ -169,17 +169,68 @@ extension MainViewModel {
     return formattedWholeNumber + fractionalPart
   }
   
-  private func formatNumber(_ value: Double?, preserveDecimals: Bool? = nil) -> String {
-    guard let value = value else { return "" }
-    
-    let formatter = NumberFormatter()
-    
-    formatter.numberStyle = .decimal
-    formatter.minimumFractionDigits = preserveDecimals ?? false ? 1 : 0
-    formatter.maximumFractionDigits = 10 // Adjust as needed
-    return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
-  }
+//  private func formatNumber(_ value: Double?, preserveDecimals: Bool? = nil) -> String {
+//    guard let value = value else { return "" }
+//    
+//    let formatter = NumberFormatter()
+//    
+//    formatter.numberStyle = .decimal
+//    formatter.minimumFractionDigits = preserveDecimals ?? false ? 1 : 0
+//    formatter.maximumFractionDigits = 10 // Adjust as needed
+//    return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
+//  }
+
   
+  
+  private func formatNumber(_ value: Double?, preserveDecimals: Bool? = nil) -> String {
+      guard let value = value else { return "" }
+      let threshold = 0.001 // Define the threshold for using significant figures
+      
+      if abs(value) >= threshold {
+          // If the number is effectively a whole number, remove decimals
+          if value.truncatingRemainder(dividingBy: 1) == 0 {
+              return String(format: "%.0f", value)
+          } else {
+              // If `preserveDecimals` is true, keep at least one decimal place
+              return preserveDecimals ?? false ? String(format: "%.1f", value) : String(format: "%.3f", value).replacingOccurrences(of: "\\.?0+$", with: "", options: .regularExpression)
+          }
+      } else {
+          // Format with 3 significant digits while keeping decimal notation
+          let formatter = NumberFormatter()
+          formatter.numberStyle = .decimal
+          formatter.maximumSignificantDigits = 3
+          formatter.usesSignificantDigits = true
+          
+          // Ensure we do not get unnecessary trailing zeros
+          formatter.minimumFractionDigits = 0
+          formatter.maximumFractionDigits = 10
+
+          return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
+      }
+  }
+
+
+  
+//  private func formatNumber(_ value: Double?, preserveDecimals: Bool? = nil) -> String {
+//    guard let value = value else { return "" }
+//    let threshold = 0.001 // Define the threshold for using significant figures
+//    
+//    if abs(value) >= threshold {
+//      // Round to the nearest thousandth
+//      return String(format: "%.3f", value)
+//    } else {
+//      // Format with 3 significant digits while keeping it in decimal notation
+//      let formatter = NumberFormatter()
+//      
+//      formatter.numberStyle = .decimal
+//      formatter.minimumFractionDigits = preserveDecimals ?? false ? 1 : 0
+//      formatter.maximumFractionDigits = 10 // Adjust as needed
+//      formatter.maximumSignificantDigits = 3
+//      formatter.usesSignificantDigits = true
+//      return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
+//    }
+//  }
+//  
   private func calculateResult(firstOperand: Double, secondOperand: Double, operator op: String?) -> Double? {
     switch op {
     case "÷":
