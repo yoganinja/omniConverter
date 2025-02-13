@@ -28,16 +28,12 @@ struct MainView: View {
                 Image(systemName: appState.selectedConversionType.imageName)
                   .resizable()
                   .frame(width: 24, height: 24)
-                  .padding(.vertical)
                 Text(appState.selectedConversionType.id)
                   .font(.system(size: 32, weight: .bold))
-                  .padding(.top, 16)
-                  .padding(.bottom, 8)
                 Spacer()
                 Image(systemName: "chevron.right")
                   .resizable()
                   .frame(width: 24, height: 24)
-                  .padding(.vertical, 40)
               }
               .padding(.vertical, 8)
             },
@@ -53,113 +49,40 @@ struct MainView: View {
             vm.updateConversionType()
           }
         }
-        .frame(maxWidth: .infinity, maxHeight: 120)
+        .frame(maxWidth: .infinity, minHeight: 100, maxHeight: UIScreen.main.bounds.height * 0.15)
         .padding(.horizontal)
         .background(Color.white)
         .cornerRadius(8)
         .shadow(radius: 2)
         .padding(.horizontal)
-        .padding(.top)
+        .padding(.top, 5)
+        
+//        Spacer()
         
         //MARK: Units Section
         ZStack {
           VStack {
-            
             //MARK: Input Section
-            HStack {
-              ValuePicker(
-                title: {
-                  VStack(alignment: .leading) {
-                    HStack(alignment: .center) {
-                      Text("\(appState.selectedInputUnit) (\(appState.selectedInputUnit.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
-                      Spacer()
-                      Image(systemName: "chevron.right")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .padding(.top)
-                      //          .foregroundColor(.gray)
-                    }
-                    .padding(.vertical, 8)
-                    
-                    HStack(alignment: .lastTextBaseline) {
-                      Text(vm.inputValue)
-                        .font(.largeTitle)
-                        .minimumScaleFactor(0.5) // Adjust this factor as needed
-                        .lineLimit(1) // Ensure single-line display
-                        .padding(.vertical, 4)
-                      Text("\(appState.selectedInputUnit.unit(for: appState.selectedConversionType)?.symbol ?? "")")
-                        .font(.subheadline)
-                    }
-                    .foregroundColor(.red)
-                  }
-                },
-                selection: $appState.selectedInputUnit,
-                isSelectorOpen: $vm.isConversionTypeSelectorOpen
-              ) {
-                ForEach(appState.selectedConversionType.unitTypeNames, id: \.self) { name in
-                  Text(verbatim: "\(name) (\(name.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
-                    .pickerTag(name)
-                }
-              }
-              .onChange(of: appState.selectedInputUnit) {_ in
-                vm.updateInputUnit()
-              }
-            }
-            .frame(maxWidth: .infinity, maxHeight: 120)
-            .padding(.horizontal)
-            .background(Color.white)
-            .cornerRadius(8)
-            .shadow(radius: 2)
-            .padding(.horizontal)
-            .padding(.top)
+            UnitPickerView(
+              title: "\(appState.selectedInputUnit)",
+              value: vm.inputValue,
+              unitSymbol: appState.selectedInputUnit.unit(for: appState.selectedConversionType)?.symbol ?? "",
+              selection: $appState.selectedInputUnit,
+              isSelectorOpen: $vm.isConversionTypeSelectorOpen,
+              unitOptions: appState.selectedConversionType.unitTypeNames,
+              updateAction: vm.updateInputUnit
+            )
             
             //MARK: Output Section
-            HStack {
-              ValuePicker(
-                title: {
-                  VStack(alignment: .leading) {
-                    HStack(alignment: .center) {
-                      Text("\(appState.selectedOutputUnit) (\(appState.selectedOutputUnit.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
-                      Spacer()
-                      Image(systemName: "chevron.right")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .padding(.top)
-                      //          .foregroundColor(.gray)
-                    }
-                    .padding(.vertical, 8)
-                    
-                    HStack(alignment: .lastTextBaseline) {
-                      Text(vm.outputValue)
-                        .font(.largeTitle)
-                        .minimumScaleFactor(0.5) // Adjust this factor as needed
-                        .lineLimit(1) // Ensure single-line display
-                        .padding(.vertical, 4)
-                      Text("\(appState.selectedOutputUnit.unit(for: appState.selectedConversionType)?.symbol ?? "")")
-                        .font(.subheadline)
-                    }
-                    .foregroundColor(.red)
-                  }
-                },
-                selection: $appState.selectedOutputUnit,
-                isSelectorOpen: $vm.isConversionTypeSelectorOpen
-              ) {
-                ForEach(appState.selectedConversionType.unitTypeNames, id: \.self) { name in
-                  Text(verbatim: "\(name) (\(name.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
-                    .pickerTag(name)
-                }
-              }
-              .onChange(of: appState.selectedOutputUnit) {_ in
-                vm.updateOutputUnit()
-              }
-            }
-            .frame(maxWidth: .infinity, maxHeight: 120)
-            .padding(.horizontal)
-            .background(Color.white)
-            .cornerRadius(8)
-            .shadow(radius: 2)
-            .padding(.horizontal)
-            .padding(.top)
+            UnitPickerView(
+              title: "\(appState.selectedOutputUnit)",
+              value: vm.outputValue,
+              unitSymbol: appState.selectedOutputUnit.unit(for: appState.selectedConversionType)?.symbol ?? "",
+              selection: $appState.selectedOutputUnit,
+              isSelectorOpen: $vm.isConversionTypeSelectorOpen,
+              unitOptions: appState.selectedConversionType.unitTypeNames,
+              updateAction: vm.updateOutputUnit
+            )
           }
           
           //MARK: Unit Switcher
@@ -172,6 +95,8 @@ struct MainView: View {
           }
           .padding()
         }
+        
+        Spacer()
         
         HStack {
           //MARK: Search
@@ -212,12 +137,14 @@ struct MainView: View {
           FavoritesView(vm: vm, isSelectorOpen: $isFavoritesOpen)
             .environmentObject(appState)
         }
+        
         Spacer()
         
         //MARK: Keyboard
         NumericKeyboard { key in
           vm.handleKeyPress(key)
         }
+        
         Spacer()
       }
       .background(Color.brown.opacity(0.1).edgesIgnoringSafeArea(.all))
