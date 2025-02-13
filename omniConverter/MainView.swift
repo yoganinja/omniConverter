@@ -70,6 +70,7 @@ struct MainView: View {
               selection: $appState.selectedInputUnit,
               isSelectorOpen: $vm.isConversionTypeSelectorOpen,
               unitOptions: appState.selectedConversionType.unitTypeNames,
+              conversionType: appState.selectedConversionType,
               updateAction: vm.updateInputUnit
             )
             
@@ -81,9 +82,110 @@ struct MainView: View {
               selection: $appState.selectedOutputUnit,
               isSelectorOpen: $vm.isConversionTypeSelectorOpen,
               unitOptions: appState.selectedConversionType.unitTypeNames,
+              conversionType: appState.selectedConversionType,
               updateAction: vm.updateOutputUnit
             )
-          }
+            
+            
+            
+//            //MARK: Input Section
+//            HStack {
+//              ValuePicker(
+//                title: {
+//                  HStack {
+//                    VStack(alignment: .leading) {
+//                      HStack(alignment: .center) {
+//                        Text("\(appState.selectedInputUnit) (\(appState.selectedInputUnit.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
+//                      }
+//                      .padding(.vertical, 8)
+//                      
+//                      HStack(alignment: .lastTextBaseline) {
+//                        Text(vm.inputValue)
+//                          .font(.largeTitle)
+//                          .minimumScaleFactor(0.5) // Adjust this factor as needed
+//                          .lineLimit(1) // Ensure single-line display
+//                          .padding(.vertical, 4)
+//                        Text("\(appState.selectedInputUnit.unit(for: appState.selectedConversionType)?.symbol ?? "")")
+//                          .font(.subheadline)
+//                      }
+//                      .foregroundColor(.red)
+//                    }
+//                    
+//                    Spacer()
+//                    Image(systemName: "chevron.right")
+//                      .resizable()
+//                      .frame(width: 24, height: 24)
+//                  }
+//                },
+//                selection: $appState.selectedInputUnit,
+//                isSelectorOpen: $vm.isConversionTypeSelectorOpen
+//              ) {
+//                ForEach(appState.selectedConversionType.unitTypeNames, id: \.self) { name in
+//                  Text(verbatim: "\(name) (\(name.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
+//                    .pickerTag(name)
+//                }
+//              }
+//              .onChange(of: appState.selectedInputUnit) {_ in
+//                vm.updateInputUnit()
+//              }
+//            }
+//            .frame(maxWidth: .infinity, minHeight: 100)
+//            .padding(.horizontal)
+//            .background(Color.white)
+//            .cornerRadius(8)
+//            .shadow(radius: 2)
+//            .padding(.horizontal)
+//            .padding(.top, 5)
+//            
+//            //MARK: Output Section
+//            HStack {
+//              ValuePicker(
+//                title: {
+//                  HStack {
+//                    VStack(alignment: .leading) {
+//                      HStack(alignment: .center) {
+//                        Text("\(appState.selectedOutputUnit) (\(appState.selectedOutputUnit.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
+//                      }
+//                      .padding(.vertical, 8)
+//                      
+//                      HStack(alignment: .lastTextBaseline) {
+//                        Text(vm.outputValue)
+//                          .font(.largeTitle)
+//                          .minimumScaleFactor(0.5) // Adjust this factor as needed
+//                          .lineLimit(1) // Ensure single-line display
+//                          .padding(.vertical, 4)
+//                        Text("\(appState.selectedOutputUnit.unit(for: appState.selectedConversionType)?.symbol ?? "")")
+//                          .font(.subheadline)
+//                      }
+//                      .foregroundColor(.red)
+//                    }
+//                    Spacer()
+//                    Image(systemName: "chevron.right")
+//                      .resizable()
+//                      .frame(width: 24, height: 24)
+//                  }
+//                },
+//                selection: $appState.selectedOutputUnit,
+//                isSelectorOpen: $vm.isConversionTypeSelectorOpen
+//              ) {
+//                ForEach(appState.selectedConversionType.unitTypeNames, id: \.self) { name in
+//                  Text(verbatim: "\(name) (\(name.unit(for: appState.selectedConversionType)?.symbol ?? ""))")
+//                    .pickerTag(name)
+//                }
+//              }
+//              .onChange(of: appState.selectedOutputUnit) {_ in
+//                vm.updateOutputUnit()
+//              }
+//            }
+//            .frame(maxWidth: .infinity, minHeight: 100)
+//            .padding(.horizontal)
+//            .background(Color.white)
+//            .cornerRadius(8)
+//            .shadow(radius: 2)
+//            .padding(.horizontal)
+//            .padding(.top, 5)
+//          }
+        }
           
           //MARK: Unit Switcher
           HStack {
@@ -141,9 +243,13 @@ struct MainView: View {
         Spacer()
         
         //MARK: Keyboard
-        NumericKeyboard { key in
-          vm.handleKeyPress(key)
-        }
+//        ZStack {
+//          ConverterIconView(size: 1.5)
+//            .opacity(0.1)
+          NumericKeyboard { key in
+            vm.handleKeyPress(key)
+          }
+//        }
         
         Spacer()
       }
